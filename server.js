@@ -46,7 +46,22 @@ async function tokenauthenticate(request){
         return await user;
         
     }
-    
+}
+
+async function getpostdata(request){
+    post = new Promise(function(resolve,reject){
+        //get data 
+        var postdata='';
+        request.on('data', function (chunk){
+            console.log("Receiving");
+            postdata += chunk;
+        });
+        request.on('end', function(){
+            console.log("Finished receiving");
+            resolve(qs.parse(postdata));
+        });
+    });
+    return await post;
 }
 
 
@@ -65,8 +80,15 @@ const app = function (req,res){
         resolve(tokenauthenticate(req));   
     });
     user.then(function(data){
-        //console.log(data);
+        console.log(data);
     } );
+
+    post = new Promise(function(resolve,reject){
+        resolve(getpostdata(req));
+    });
+    post.then(function(data){
+        console.log(data);
+    })
 
     if (req.url=='/favicon.ico' || req.url=='/style.css' || req.url=='/jquery.js'){
         switch(req.url){
@@ -96,17 +118,7 @@ const app = function (req,res){
     }else{
 
 
-
-        //get data 
-        var postdata='';
-        req.on('data', function (chunk){
-            console.log("Receiving");
-            postdata += chunk;
-        });
-        req.on('end', function(){
-            console.log("Finished receiving");
-            var post=qs.parse(postdata);
-        });
+        
         switch(req.url){
             case '/login' :
                 if(authenticated){
@@ -121,7 +133,7 @@ const app = function (req,res){
             case '/loginattempt':
                 username=post['username'];
                 password=post['password'];
-                post=qs.parse(postdata);
+                
                 query="SELECT * FROM users WHERE username= '"+username+"';";
 
                 var now= new Date;
