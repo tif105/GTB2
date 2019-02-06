@@ -109,6 +109,21 @@ const app = function (req,res){
         }else{
 
             switch(req.url){
+                case '/':
+                    if (req.authenticated==true){
+                        //get date for cookie expiration
+
+                        res.writeHead(200, {'content-type': 'text/html',});
+                        res.end(apphtml);
+                        hits=Number(hits+1);
+                        console.log("Index served by PID"+pid);
+                    }else{
+                        res.writeHead(302,{'location' : 'login'});
+                        res.end();
+                    }
+                    
+                    break;
+                    
                 case '/login' :
                     if(req.authenticated){
                         res.writeHead(302,{'location' : '/'});
@@ -273,21 +288,6 @@ const app = function (req,res){
                     res.end(goal);
                     break;
     
-        
-                case '/':
-                    if (req.authenticated==true){
-                        //get date for cookie expiration
-    
-                        res.writeHead(200, {'content-type': 'text/html',});
-                        res.end(apphtml);
-                        hits=Number(hits+1);
-                        console.log("Index served by PID"+pid);
-                    }else{
-                        res.writeHead(302,{'location' : 'login'});
-                        res.end();
-                    }
-                    
-                    break;
         
                 case '/getgoals' :
                     if (req.authenticated){
