@@ -23,8 +23,8 @@ const connection = mysql.createConnection({
 async function tokenauthenticate(request){
 
     //get id from cookie
-    if (req.headers.cookie!=undefined){
-        cookie=req.headers.cookie;
+    if (request.headers.cookie!=undefined){
+        cookie=request.headers.cookie;
         cookies=cookie.split("; ");
         cookiesplit=cookies[0].split('=');
         uuid=cookiesplit[1];
@@ -32,15 +32,19 @@ async function tokenauthenticate(request){
         session=cookiesplit[1];
 
         query="select * from tokens where session='"+session+"' and uuid='"+uuid+"';";
-        connection.query(query, function (error, results,fields){});
-        if (results.length>0){ //confirms a match has been found in the databse
-            console.log("authenticated");
-            authenticated=true;
-            username=results[0].username;
-            
-        }
+        user = new Promise(function (resolve,reject){
+            connection.query(query, function (error, results,fields){
+                if (results.length>0){ //confirms a match has been found in the databse
+                    console.log("authenticated");
+                    authenticated=true;
+                    resolve(results[0].username);
+                    
+                }
+            });
+        });
 
-        return "smith"
+        return await user;
+        
     }
     
 }
@@ -57,9 +61,12 @@ const app = function (req,res){
     var username="";
     var goals="";
 
-    user= new Promise(function (){
+    user= new Promise(function (resolve,reject){
         resolve(tokenauthenticate(req));   
     });
+    user.then(function(data){
+        //console.log(data);
+    } );
 
     if (req.url=='/favicon.ico' || req.url=='/style.css' || req.url=='/jquery.js'){
         switch(req.url){
