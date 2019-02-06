@@ -68,11 +68,6 @@ async function getpostdata(request){
 
 
 const app = function (req,res){
-    var session=""
-    var uuid="";
-    var authenticated=false;
-    var username="";
-    var goals="";
 
     user= new Promise(function (resolve,reject){
         resolve(tokenauthenticate(req));   
@@ -112,9 +107,7 @@ const app = function (req,res){
             }
     
         }else{
-    
-    
-            
+
             switch(req.url){
                 case '/login' :
                     if(req.authenticated){
@@ -204,9 +197,6 @@ const app = function (req,res){
         
             
                     }           
-    
-    
-    
                     //converts date reference to explicit daTE				
                     Today= new Date();
                     gdate= new Date();
@@ -262,11 +252,7 @@ const app = function (req,res){
                     //######
                     gdate.setHours(hours);
                     gdate.setMinutes(minutes);
-                
-                    
-    
-                    
-    
+
                     //reconstruct variables from gdate
                     month =gdate.getMonth();
                     day   =gdate.getDate();
@@ -297,7 +283,7 @@ const app = function (req,res){
                         hits=Number(hits+1);
                         console.log("Index served by PID"+pid);
                     }else{
-                        res.writeHead(302,{'location' : 'login'})
+                        res.writeHead(302,{'location' : 'login'});
                         res.end();
                     }
                     
@@ -308,6 +294,7 @@ const app = function (req,res){
                         query=" select * from goals where username='"+req.username+"';";
                         connection.query(query,function(error,results,fields){
                             console.log(results);
+                            var goals="";
                             for (var i=0; i<results.length;i++){
                                 console.log(results[i].goal);
                                 goals+=results[i].goal+":"+results[i].ID+";";
