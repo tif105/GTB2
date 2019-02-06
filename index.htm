@@ -1,0 +1,298 @@
+<!--//+---------------------------------------------+
+      |                                             |
+      |             All rights reserved             |
+      |             Christopher Watson              |
+      |                                             |
+      +---------------------------------------------+-->
+
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Gotimebuddy</title>
+
+<link href="style.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+	<div id="masthead">
+	<div><b>GotTIMEBuddy</b></div>
+		
+	</div>
+	<div id="adddeadline" style="display:none">
+
+		Type:
+		<select id="type">
+			<option value="1">Everyday</option>
+			<option value="2">One off</option>
+		</select>
+		Description: 
+		<input id="goalname" type="text">
+		Hour: 
+		<select id="hour">
+			<option value= "0" >0</option>
+			<option value= "1" >1</option>
+			<option value= "2" >2</option>
+			<option value= "3" >3</option>
+			<option value= "4" >4</option>
+			<option value= "5" >5</option>
+			<option value= "6" >6</option>
+			<option value= "7" >7</option>
+			<option value= "8" >8</option>
+			<option value= "9" >9</option>
+			<option value= "10">10</option>
+			<option value= "11">11</option>
+			<option value= "12">12</option>
+			<option value= "13">13</option>
+			<option value= "14">14</option>
+			<option value= "15">15</option>
+			<option value= "16">16</option>
+			<option value= "17">17</option>
+			<option value= "18">18</option>
+			<option value= "19">19</option>
+			<option value= "20">20</option>
+			<option value= "21">21</option>
+			<option value= "22">22</option>
+			<option value= "23">23</option>
+		</select>
+		Minute:
+		<select id="minutes">
+			<option value="0">0</option>
+			<option value="15">15</option>
+			<option value="30">30</option>
+			<option value="45">45</option>
+		</select><br>
+		<div id="dateform">
+			<input id="year" type="number" min="2000"  style="width: 4em;">
+			<select id="month">
+				<option value="0">January</option>
+				<option value="1">February</option>
+				<option value="2">March</option>
+				<option value="3">April</option>
+				<option value="4">May</option>
+				<option value="5">June</option>
+				<option value="6">July</option>
+				<option value="7">August</option>
+				<option value="8">September</option>
+				<option value="9">October</option>
+				<option value="10">November</option>
+				<option value="11">December</option>
+			</select>
+			<input id="day" min="1" type="number" style="width: 3em;">
+			
+			
+		</div>
+	
+		<button id="okbutton">OK</button>
+	</div>
+	<button id="addeadlinebtton">ADD+</button>
+	
+	<div id="aiassist">
+		<input type="text" id="aitextfield"><br>
+		<button id="aiokbutton">OK</button><br>
+		<p id="aioutput"></p>
+	</div>
+	
+	<p id="output"> </p>
+	
+
+</body>
+
+<script src="jquery.js"></script>
+<script>
+	//global variables
+	goal = [];
+	
+	//add deadline button to unhide manual form
+	addeadlinebutton=document.getElementById('addeadlinebtton')
+	adddeadline = document.getElementById('adddeadline');
+	addeadlinebutton.addEventListener('click', function (){adddeadline.style.display="block"});
+	
+	function servertogoal(data){
+		goaltext=data.split(",");
+		var month=Number(goaltext[0]);
+		var day=Number(goaltext[1]);
+		var year=Number(goaltext[2]);
+		var hours=Number(goaltext[3]);
+		var minutes=Number(goaltext[4]);
+		var what=goaltext[5];
+
+		colonsplit=goaltext[5].split(':');
+		ID=colonsplit[1];
+		var what=colonsplit[0];
+		
+		
+		if( typeof month!="undefined" && typeof day!="undefined" && typeof year!="undefined" && typeof hours!="undefined"
+		&& typeof minutes!="undefined" && typeof what!="undefined"){
+			index=goal.length;
+			goal[index] = new deadline(what,2,year,month,day,hours,minutes,00,ID)
+			
+		} 
+
+	}
+
+	function getgoals(){
+		$.post("/getgoals",function(data){
+			datasplit=data.split(";");
+			console.log(datasplit);
+			goal=[];
+			for (i=0;i<(datasplit.length)-1;i++){
+				servertogoal(datasplit[i]);
+			}
+			drawdashboard();
+		});
+		
+	}
+	//getgoalloop
+	setInterval(getgoals, 15000);
+
+
+	//create deadline blueprint
+	function deadline(description,type,year,month,day,hour,minute,second,ID){
+		this.ID=ID;
+		this.description = description;
+		this.type = type;
+		this.year = year;
+		this.month = month;
+		this.day = day;
+		this.hour = hour;
+		this.minute = minute;
+		this.second = second;
+		this.getmilliseconds= function () {
+			if(this.type==1){
+				return (this.hour*3600000)+(this.minute*60000)
+			}
+			if (this.type==2){
+				let dat= new Date(this.year,this.month,this.day,this.hour,this.minute,this.second,00);
+				return dat.getTime();
+			
+			
+			}
+		
+		};
+		
+		this.getmillisecondsto= function () {
+
+			if (this.type==1){
+				var cmilliseconds= (date.getHours()*3600000)+(date.getMinutes()*60000);
+				var gmilliseconds= this.getmilliseconds();
+				if (cmilliseconds>=gmilliseconds){
+					gmilliseconds =gmilliseconds + 86400000;
+				}
+			}
+		
+			if (this.type==2){
+				var cmilliseconds= (date.getTime());
+				var gmilliseconds= (this.getmilliseconds());
+			
+				
+			}
+			return (gmilliseconds-cmilliseconds);
+		};
+	
+		this.getminutesto = function () {return (this.getmillisecondsto() /1000/60)};
+
+	}
+
+	//create pointers for AI assistant
+	aitextfield=document.getElementById('aitextfield');
+	aiokbutton=document.getElementById('aiokbutton');
+	
+	aiokbutton.addEventListener('click', function (){
+		text=aitextfield.value.toLocaleLowerCase();
+		//send to server
+		$.post("aibot",{text: text}, function(data){
+			goaltext=data.split(",");
+			getgoals();
+			
+		});
+		
+	});
+	function deletegoal(ID){
+		$.post("/deletegoal",{ID: ID });
+		getgoals();
+
+	}
+
+	function drawdashboard(){
+		// get current time
+		date= new Date();
+	
+		//update current time every loop
+		chours=date.getHours();
+		cminutes=date.getMinutes();
+		ctimilliseconds=(chours*3600000)+(cminutes*60000);
+	
+			
+			
+		//time to
+		outputHTML="";
+		if (goal.length >0){
+			l=goal.length
+			l=l-1;
+			
+			for (i=0; i<=l; i++){
+				ID=goal[i].ID;
+				ttimetoim=goal[i].getminutesto();
+				description=goal[i].description;
+				ttimetoih=Math.floor(ttimetoim/60);
+				ttimetominutes=Math.floor(ttimetoim%60);
+				outputHTML=outputHTML+'<Div class="goalbox"><Div class="goalheader">'+'<button class="deletebutton" onclick="deletegoal('+ID+')">X</button>'+description+'</Div>Hours: '+ttimetoih+" minutes: "+ttimetominutes+'</Div><BR>';
+				
+			}
+			
+		
+			
+			
+		}
+	document.getElementById('output').innerHTML=outputHTML;
+
+	}
+
+
+
+	
+
+	//eventhandlers	
+	document.getElementById('okbutton').addEventListener('click',function (){
+		//take daytime and convert to milliseconds
+		type=document.getElementById('type').value;
+		hours=document.getElementById('hour').value;
+		minutes=document.getElementById('minutes').value;
+		let description= document.getElementById('goalname').value;
+	
+		//add as object to 'goal' array
+		index=goal.length
+		if (type==1){
+		
+			goal[index] = new deadline(description,1,0,0,0,hours,minutes,00);
+		}
+		if (type==2){
+			month=document.getElementById('month').value;
+			day=document.getElementById('day').value;
+			year=document.getElementById('year').value;
+			goal[index] = new deadline(description,2,year,month,day,hours,minutes,00);
+		}
+		adddeadline = document.getElementById('adddeadline');
+		adddeadline.style.display="none";
+		
+	});
+		
+	document.getElementById('type').addEventListener('change', function(){
+		let value=document.getElementById('type').value;
+		if (value==1){
+			document.getElementById('dateform').style.display="none";
+			console.log("hide");
+		} 
+		if (value==2){
+			document.getElementById('dateform').style.display="block";
+			console.log("show");
+		}
+	
+	});
+
+	getgoals();
+	
+</script>
+</html>

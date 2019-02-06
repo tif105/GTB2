@@ -1,0 +1,67 @@
+/* CSS Document */
+
+body {
+	
+	margin : 0px;
+	background-color : #354244;
+
+}
+
+#test {
+	color: aqua;
+	
+	
+}
+
+#masthead {
+	color : white;
+	background-color : #FF5F00;
+	height : 80px;
+	padding-left : 15px;
+	padding-top : 15px;
+	font-size: 32px;
+	
+}
+
+#time {
+	color :  black;
+}
+
+#dateform {
+	display: none;
+	
+}
+
+.goalbox {
+	background-color: #000267;
+	boarder-radius: 3px;
+	color : azure;
+	
+	border-style: solid;
+	border-width: 1px;
+	margin-bottom: 15px;
+	padding-bottom: 2px;
+	border-radius : 5px;
+	right: 80%
+	
+}
+
+.goalheader{
+	background-color: #595A7E;
+	
+}
+
+.form{
+	background-color : orangered;
+	
+	
+}
+.deletebutton{
+	background-color : transparent;
+	color: white;
+	border : none;
+
+}
+.deletebutton:hover{
+	color : #959799;
+}
