@@ -203,16 +203,14 @@
 		text=aitextfield.value.toLocaleLowerCase();
 		//send to server
 		$.post("aibot",{text: text}, function(data){
-			goaltext=data.split(",");
 			getgoals();
-			
 		});
 		
 	});
+
 	function deletegoal(ID){
 		$.post("/deletegoal",{ID: ID });
 		getgoals();
-
 	}
 
 	function drawdashboard(){
@@ -224,8 +222,6 @@
 		cminutes=date.getMinutes();
 		ctimilliseconds=(chours*3600000)+(cminutes*60000);
 	
-			
-			
 		//time to
 		outputHTML="";
 		if (goal.length >0){
