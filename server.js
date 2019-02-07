@@ -312,12 +312,11 @@ const app = function (req,res){
     
     
             }
-    
         }
     });
 
 };
 
-const server = http.createServer(app);
+const server = http.createServer(app)
 
-server.listen(80, function(){console.log('server is running....');});
+server.listen(80, function(){console.log('server is running....🚀');});
