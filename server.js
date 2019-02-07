@@ -66,6 +66,124 @@ async function getpostdata(request){
     return await post;
 }
 
+function airespond(req,res){
+    // AIparse
+    text=req.post["text"];
+    textsplit=text.split(" ");
+    l=textsplit.length;
+    endword=l-1;
+    var when
+    for (var i=0; i<=endword; i++){
+        //catch date reference
+        if (textsplit[i]=="today"){when=0;}
+        if (textsplit[i]=="tomorrow"){when=1; console.log("tomorrow")} //if i find the word tomorrow
+        if (textsplit[i]=="yesterday"){when=2;} //if i find the word tomorrow
+
+        if (textsplit[i]=="next"){
+            if (textsplit[i+1]=="monday"){when=3;}
+            if (textsplit[i+1]=="tuesday"){when=4;}
+            if (textsplit[i+1]=="wednesday"){when=5;}
+            if (textsplit[i+1]=="thursday"){when=6;}
+            if (textsplit[i+1]=="friday"){when=7;}
+            if (textsplit[i+1]=="saturday"){when=8;}
+            if (textsplit[i+1]=="sunday"){when=9;}
+        }
+
+        if (textsplit[i]=="i" && textsplit[i+1]=="have"){
+            var what=textsplit[i+2];
+        }
+
+        if (textsplit[i]=="at" || textsplit[i]=="@"){
+            if ((isNaN(textsplit[i+1]))!=true && textsplit[i+1].length==4){
+                //break 24 hour time into hours and minutes
+                var time=textsplit[i+1];
+                var timesplit=time.split("");
+                var hours=timesplit[0]+timesplit[1];
+                var minutes=timesplit[2]+timesplit[3];
+            }
+        }
+
+
+    }           
+    //converts date reference to explicit daTE				
+    var Today= new Date();
+    var gdate= new Date();
+    if (typeof(when)!="undefined"){
+        switch(when){
+            case 0:
+                gdate=Today;
+                break;
+            case 1:
+                gdate.setDate(Today.getDate()+1);
+                break;
+            case 2:
+                gdate.setDate(Today.getDate()-1);
+                break;
+            case 3:
+                dayofweek=Today.getDay();
+                addon=(7-dayofweek)+1;
+                gdate.setDate(Today.getDate()+addon);
+                break;
+            case 4:
+                dayofweek=Today.getDay();
+                addon=(7-dayofweek)+2;
+                gdate.setDate(Today.getDate()+addon);
+                break;
+            case 5:
+                dayofweek=Today.getDay();
+                addon=(7-dayofweek)+3;
+                gdate.setDate(Today.getDate()+addon);
+                break;
+            case 6:
+                dayofweek=Today.getDay();
+                addon=(7-dayofweek)+4;
+                gdate.setDate(Today.getDate()+addon);
+                break;
+            case 7:
+                dayofweek=Today.getDay();
+                addon=(7-dayofweek)+5;
+                gdate.setDate(Today.getDate()+addon);
+                break;
+            case 8:
+                dayofweek=Today.getDay();
+                addon=(7-dayofweek)+6;
+                gdate.setDate(Today.getDate()+addon);
+                break;
+            case 9:
+                dayofweek=Today.getDay();
+                addon=(7-dayofweek)+7;
+                gdate.setDate(Today.getDate()+addon);
+                break;
+    
+        }
+    }
+    
+
+    //######
+    gdate.setHours(hours);
+    gdate.setMinutes(minutes);
+
+    //reconstruct variables from gdate
+    var month =gdate.getMonth();
+    var day   =gdate.getDate();
+    var year  =gdate.getFullYear();
+
+
+    //create goal
+
+    if( typeof month!="undefined" && typeof day!="undefined" && typeof year!="undefined" && typeof hours!="undefined"
+    && typeof minutes!="undefined" && typeof what!="undefined"){
+        var goal=month+","+day+","+year+","+hours+","+minutes+","+what;
+    }else {goal="fail";}
+    console.log(goal);
+    //add to database
+    if (goal!="fail"){
+        var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
+    }
+    connection.query(query);
+    res.end(goal);
+
+}
 
 const app = function (req,res){
 
@@ -174,118 +292,7 @@ const app = function (req,res){
                     break;
     
                 case '/aibot' :
-                    // AIparse
-                    text=req.post["text"];
-                    textsplit=text.split(" ");
-                    l=textsplit.length;
-                    endword=l-1;
-    
-                    for (var i=0; i<=endword; i++){
-                        //catch date reference
-                        if (textsplit[i]=="today"){when=0;}
-                        if (textsplit[i]=="tomorrow"){when=1; console.log("tomorrow")} //if i find the word tomorrow
-                        if (textsplit[i]=="yesterday"){when=2;} //if i find the word tomorrow
-        
-                        if (textsplit[i]=="next"){
-                            if (textsplit[i+1]=="monday"){when=3;}
-                            if (textsplit[i+1]=="tuesday"){when=4;}
-                            if (textsplit[i+1]=="wednesday"){when=5;}
-                            if (textsplit[i+1]=="thursday"){when=6;}
-                            if (textsplit[i+1]=="friday"){when=7;}
-                            if (textsplit[i+1]=="saturday"){when=8;}
-                            if (textsplit[i+1]=="sunday"){when=9;}
-                        }
-    
-                        if (textsplit[i]=="i" && textsplit[i+1]=="have"){
-                            what=textsplit[i+2];
-                        }
-        
-                        if (textsplit[i]=="at" || textsplit[i]=="@"){
-                            if ((isNaN(textsplit[i+1]))!=true && textsplit[i+1].length==4){
-                                //break 24 hour time into hours and minutes
-                                time=textsplit[i+1];
-                                timesplit=time.split("");
-                                hours=timesplit[0]+timesplit[1];
-                                minutes=timesplit[2]+timesplit[3];
-                            }
-                        }
-        
-            
-                    }           
-                    //converts date reference to explicit daTE				
-                    Today= new Date();
-                    gdate= new Date();
-    
-                    switch(when){
-                        case 0:
-                            gdate=Today;
-                            break;
-                        case 1:
-                            gdate.setDate(Today.getDate()+1);
-                            break;
-                        case 2:
-                            gdate.setDate(Today.getDate()-1);
-                            break;
-                        case 3:
-                            dayofweek=Today.getDay();
-                            addon=(7-dayofweek)+1;
-                            gdate.setDate(Today.getDate()+addon);
-                            break;
-                        case 4:
-                            dayofweek=Today.getDay();
-                            addon=(7-dayofweek)+2;
-                            gdate.setDate(Today.getDate()+addon);
-                            break;
-                        case 5:
-                            dayofweek=Today.getDay();
-                            addon=(7-dayofweek)+3;
-                            gdate.setDate(Today.getDate()+addon);
-                            break;
-                        case 6:
-                            dayofweek=Today.getDay();
-                            addon=(7-dayofweek)+4;
-                            gdate.setDate(Today.getDate()+addon);
-                            break;
-                        case 7:
-                            dayofweek=Today.getDay();
-                            addon=(7-dayofweek)+5;
-                            gdate.setDate(Today.getDate()+addon);
-                            break;
-                        case 8:
-                            dayofweek=Today.getDay();
-                            addon=(7-dayofweek)+6;
-                            gdate.setDate(Today.getDate()+addon);
-                            break;
-                        case 9:
-                            dayofweek=Today.getDay();
-                            addon=(7-dayofweek)+7;
-                            gdate.setDate(Today.getDate()+addon);
-                            break;
-        
-                    }
-    
-                    //######
-                    gdate.setHours(hours);
-                    gdate.setMinutes(minutes);
-
-                    //reconstruct variables from gdate
-                    month =gdate.getMonth();
-                    day   =gdate.getDate();
-                    year  =gdate.getFullYear();
-    
-                    hours =gdate.getHours();
-                    minutes=gdate.getMinutes();
-                    //create goal
-    
-                    if( typeof month!="undefined" && typeof day!="undefined" && typeof year!="undefined" && typeof hours!="undefined"
-                    && typeof minutes!="undefined" && typeof what!="undefined"){
-                        goal=month+","+day+","+year+","+hours+","+minutes+","+what;
-                    }
-                    console.log(goal);
-                    //add to database
-                    query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
-                    connection.query(query);
-                    res.end(goal);
+                    airespond(req,res);
                     break;
     
         
