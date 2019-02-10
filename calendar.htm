@@ -1,0 +1,346 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Calendar</title>
+
+        <style>
+                #month {
+                    padding-top: 1em;
+                    padding-bottom: 1em;
+                    background-color :#ff3314;
+                    font-size : 20pt;
+                    font-weight : bold;
+                    text-align: center;
+                    color: white;
+                    width : 1000px;
+                    text-align : center;
+                    height : 130px;
+                    border-top-left-radius : 10px;
+                    border-top-right-radius : 10px;
+                }
+
+                #month ul {
+                    margin : 10px;
+                    padding : 0px;
+
+                }
+
+                .month {
+
+                    list-style : none;
+                    
+                }
+                .last  {
+                    list-style: none;
+                    float:left;
+                    
+                }
+                .next {
+                    list-style: none;
+                    float:right;
+                }
+
+                #main {
+
+                    color : black;
+                    width: 1000px;
+                }
+                #calendar {
+                    background-color : whitesmoke;
+                    width : 900px;
+                    height : 500 px;
+                }
+                .daysofweek li{
+                    display: inline-block;
+                    width: 5.03em;
+                    text-align : left;
+                }
+                .daysofweek{
+                    float: left;
+                }
+
+                #form {
+                    width : 980px;;
+                    height : 500px;
+                    position : fixed;
+                    top : 180px;
+                    background : rgba(233, 200, 200, 0.98);
+                    left : 15px;
+                    
+
+                    border-radius : 10px;
+                    padding : 4px;
+                    
+                }
+                #clbutton{
+                    background : none;
+                    border-style : solid;
+                    border-color : white;
+                    color : white;
+
+                }
+                .arrowbutton{
+                    background : none;
+                    border-style : none;
+                    font-size: 36px;
+                    color : white;
+                    border-radius : 10px;
+                    
+                }
+
+                
+            </style>
+
+            <script src="https://d3js.org/d3.v5.min.js"></script>
+    </head>
+
+    <body>
+        <div id="banner">
+        
+            <div id="month">
+                <ul class="monthbar">
+                    <li class="year" id="year">2019</li>
+                    <li class="next"><button id="nextarrow" class="arrowbutton">&#8250;</button></li>
+                    <li class="last" ><button id="lastarrow" class="arrowbutton">&#8249;</button></li>
+                    <li class="month" id="Month"></li>
+                </ul>
+                <ul class="daysofweek">
+                        <li>Monday</li>
+                        <li>Tuesday</li>
+                        <li>Wednesday</li>
+                        <li>Thursday</li>
+                        <li>Friday</li>
+                        <li>Saturday</li>
+                        <li>Sunday</li>
+    
+                    </ul>
+
+            </div>
+
+        </div>
+        <div id="main">
+            <SVG id="Calendar" width="1000px" height = "800px">
+                <rect width="100%" height="100%" style="fill:white; stroke : black;" />
+                <!--                      horizontal dividers                -->
+                <line x1=14.28571429% y1="0" x2=14.28571429% y2=100% style="stroke:black;" />
+                <line x1=28.57142857% y1="0" x2=28.57142857% y2=100% style="stroke:black;" />
+                <line x1=42.85714286% y1="0" x2=42.85714286% y2=100% style="stroke:black;" />
+                <line x1=57.14285714% y1="0" x2=57.14285714% y2=100% style="stroke:black;" />
+                <line x1=71.42857143% y1="0" x2=71.42857143% y2=100% style="stroke:black;" />
+                <line x1=85.71428571% y1="0" x2=85.71428571% y2=100% style="stroke:black;" />
+                <line x1=100% y1="0" x2=100% y2=100% style="stroke:black;" />
+                <!--                      diagonal dividers                  -->
+                <line x1=0% y1="16.66667%" x2=100% y2=16.66667% style="stroke:black;" />
+                <line x1=0% y1="33.33334%" x2=100% y2=33.33334% style="stroke:black;" />
+                <line x1=0% y1="50.00001%" x2=100% y2=50.00001% style="stroke:black;" />
+                <line x1=0% y1="66.66668%" x2=100% y2=66.66668% style="stroke:black;" />
+                <line x1=0% y1="83.33335%" x2=100% y2=83.33335% style="stroke:black;" />
+
+            </SVG>
+                
+
+        </div>
+
+        <div id="form">stuff</div>
+
+        
+    </body>
+
+</html>
+
+<script>
+    var calsvg=document.getElementById('Calendar').innerHTML;
+    function daysinmonth(date){
+        return new Date(date.getFullYear(),date.getMonth()+1, 0).getDate();
+    }
+    function firstdayofmonth(date){
+        date.setDate(1);
+        return date.getDay();
+    }
+
+    function refreshcalendar(){
+        var monthn =date.getMonth();
+        var svg=calsvg;
+        
+        
+
+        switch (monthn){
+            case 0:
+                monthel.innerHTML="January";
+                break;
+            case 1:
+                monthel.innerHTML="February";
+                break;
+            case 2:
+                monthel.innerHTML="March";
+                break;
+            case 3:
+                monthel.innerHTML="April";
+                break;
+            case 4:
+                monthel.innerHTML="May";
+                break;
+            case 5:
+                monthel.innerHTML="June";
+                break;
+            case 6:
+                monthel.innerHTML="July";
+                break;
+            case 7:
+                monthel.innerHTML="August";
+                break;
+            case 8:
+                monthel.innerHTML="September";
+                break;
+            case 9:
+                monthel.innerHTML="October";
+                break;
+            case 10:
+                monthel.innerHTML="November";
+                break;
+            case 11:
+                monthel.innerHTML="December";
+                break;
+        }
+        daysThisMonth=daysinmonth(date);
+        firstDayOfmMnth=firstdayofmonth(date);
+        yearel.innerHTML=date.getFullYear();
+        if (firstDayOfmMnth==0){firstDayOfmMnth=7};
+
+        for (i=0; i<daysThisMonth; i++){
+	        day=i+firstDayOfmMnth-1
+	        actualday=i+1;
+            svg+='<text x="'+getxcoord(day)+'%" y="'+(getycoord(day)+2)+'%" fill="black">'+actualday+'</text>'
+            document.getElementById('Calendar').innerHTML=svg;
+        }
+    }
+
+
+    function getxcoord(day){
+        x=(day%7);
+        return x*14.28571428571429;
+    }
+
+    function getycoord(day){
+        y=(Math.floor(day/7));
+        return (y)*16.66666666666667;
+    }
+
+    function pixelstopercentagex(pixels){
+        return pixels/1000*100;
+
+    }
+    function pixelstopercentagey(pixels){
+        return pixels/800*100;
+    }
+
+    function redrawmain(){
+        document.getElementById('main').innerHTML=`
+        <SVG id="Calendar" width="1000px" height = "800px">
+                <rect width="100%" height="100%" style="fill:white; stroke : black;" />
+                <!--                      horizontal dividers                -->
+                <line x1=14.28571429% y1="0" x2=14.28571429% y2=100% style="stroke:black;" />
+                <line x1=28.57142857% y1="0" x2=28.57142857% y2=100% style="stroke:black;" />
+                <line x1=42.85714286% y1="0" x2=42.85714286% y2=100% style="stroke:black;" />
+                <line x1=57.14285714% y1="0" x2=57.14285714% y2=100% style="stroke:black;" />
+                <line x1=71.42857143% y1="0" x2=71.42857143% y2=100% style="stroke:black;" />
+                <line x1=85.71428571% y1="0" x2=85.71428571% y2=100% style="stroke:black;" />
+                <line x1=100% y1="0" x2=100% y2=100% style="stroke:black;" />
+                <!--                      diagonal dividers                  -->
+                <line x1=0% y1="16.66667%" x2=100% y2=16.66667% style="stroke:black;" />
+                <line x1=0% y1="33.33334%" x2=100% y2=33.33334% style="stroke:black;" />
+                <line x1=0% y1="50.00001%" x2=100% y2=50.00001% style="stroke:black;" />
+                <line x1=0% y1="66.66668%" x2=100% y2=66.66668% style="stroke:black;" />
+                <line x1=0% y1="83.33335%" x2=100% y2=83.33335% style="stroke:black;" />
+
+            </SVG>
+        `;
+        refreshcalendar();
+        addclicktocalendar();
+    }
+
+    date=new Date();
+    monthel=document.getElementById('Month');
+    nextbutton=document.getElementById('nextarrow');
+    lastbutton=document.getElementById('lastarrow');
+    yearel=document.getElementById('year');
+    refreshcalendar();
+
+    nextbutton.addEventListener('click', function(){
+        var monthn=date.getMonth();
+        var year=date.getFullYear();
+        
+        if(monthn<11){monthn++;}else{
+            monthn=0;
+            year++
+        }
+ 
+        date.setMonth(monthn); date.setFullYear(year);
+        refreshcalendar();
+    })
+
+
+    lastbutton.addEventListener('click', function(){
+        var monthn=date.getMonth();
+        var year=date.getFullYear();
+        
+        if(monthn>0){monthn--;}else{
+            
+            
+            monthn=11;
+            year--;
+        }
+ 
+        date.setMonth(monthn); date.setFullYear(year);
+        date.setDate(1)
+        refreshcalendar();
+    })
+    function addclicktocalendar(){
+        document.getElementById('Calendar').addEventListener('click', function (event){
+            clickxperc=pixelstopercentagex(event.offsetX); clickyperc= pixelstopercentagey(event.offsetY);
+            for (i=0; i<daysThisMonth; i++){
+                day=i+firstDayOfmMnth-1
+                xp1=getxcoord(day); yp1=getycoord(day); xp2=getxcoord(day)+14.28571428571429; yp2=getycoord(day)+16.66666666666667;
+                actualday=i+1;
+                if (clickxperc>xp1 && clickxperc < xp2 && clickyperc>yp1 && clickyperc<yp2){
+                    console.log(actualday);
+                    year=date.getFullYear();
+                    month=(date.getMonth()+1);
+                    monthstr=month
+                    if(monthstr<10){monthstr="0"+monthstr};
+                    daystr=actualday;
+                    if(daystr<10){daystr="0"+daystr};
+                    document.getElementById('form').innerHTML=`
+                     <button id="clbutton" onclick="document.getElementById('form').style.display='none'; ">x</button>
+                    <p>
+                        <table>
+                            <tr>
+                                <td>Start date:</td>
+                                <td><input type="date" value="`+year+`-`+monthstr+`-`+daystr+`"></td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td><input type="text"></td>
+                            </tr>
+                            <tr>
+                                <td><button>submit</button></td>
+                            </tr>
+                        </table>
+                    </p>
+                    `;
+                    
+                    document.getElementById('form').style.display='block';
+                }
+                
+            }
+
+        });
+    }
+    addclicktocalendar();
+    document.getElementById('form').style.display="none"
+
+
+
+
+
+</script>
