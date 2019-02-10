@@ -8,8 +8,8 @@ const pid = process.pid;
 var apphtml=(fs.readFileSync('./index.htm'));
 var jqueryfile=(fs.readFileSync('./jquery.js'));
 var loginhtml=(fs.readFileSync('login.html'));
-var page = "<HTML>"
 var hits=0;
+var calendarhtml=(fs.readFileSync("./calendar.htm"));
 
 const connection = mysql.createConnection({
     host:'localhost',
@@ -251,6 +251,21 @@ const app = function (req,res){
                         res.end(loginhtml);
                     }
                     break;
+                case '/calendar' :
+                    if (req.authenticated){
+                        res.writeHead(200,{'content-type' : 'text/html'});
+                        res.end(calendarhtml);
+                        
+                    }else{
+                        res.writeHead(302,{'location' : 'login'});
+                        res.end();
+                    }
+                case '/addgoal' : if (req.authenticated){
+                        console.log(req.post);
+                        res.end();
+                    }else{
+                        res.end("Fail");
+                    }
     
                 case '/loginattempt':
                     username=req.post['username'];

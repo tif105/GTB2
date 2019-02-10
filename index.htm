@@ -18,6 +18,7 @@
 <body>
 	<div id="masthead">
 	<div><b>GotTIMEBuddy</b></div>
+	<button id="addeadlinebtton">ADD+</button>
 		
 	</div>
 	<div id="adddeadline" style="display:none">
@@ -86,7 +87,7 @@
 	
 		<button id="okbutton">OK</button>
 	</div>
-	<button id="addeadlinebtton">ADD+</button>
+	
 	
 	<div id="aiassist">
 		<input type="text" id="aitextfield"><br>
@@ -107,7 +108,7 @@
 	//add deadline button to unhide manual form
 	addeadlinebutton=document.getElementById('addeadlinebtton')
 	adddeadline = document.getElementById('adddeadline');
-	addeadlinebutton.addEventListener('click', function (){adddeadline.style.display="block"});
+	addeadlinebutton.addEventListener('click', function (){window.location="/calendar"});
 	
 	function servertogoal(data){
 		goaltext=data.split(",");
