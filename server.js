@@ -185,6 +185,24 @@ function airespond(req,res){
 
 }
 
+function addtogoals(req,res){
+    
+    var date=req.post["date"];
+    var datespl=date.split('-');
+    var year=datespl[0];
+    var month=Number(datespl[1]);
+    month--;
+    var day=datespl[2];
+    var what=req.post['description']; console.log(what);
+    var hour=req.post['hours']; console.log(hour);
+    var minutes=req.post['minutes']; console.log(hour);
+    var goal=month+","+day+","+year+","+hour+","+minutes+","+what;
+    var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
+    console.log(query);
+    connection.query(query);
+    res.end();
+}
+
 const app = function (req,res){
 
     user= new Promise(function (resolve,reject){
@@ -260,12 +278,13 @@ const app = function (req,res){
                         res.writeHead(302,{'location' : 'login'});
                         res.end();
                     }
+                    break;
                 case '/addgoal' : if (req.authenticated){
-                        console.log(req.post);
-                        res.end();
+                        addtogoals(req,res)
                     }else{
                         res.end("Fail");
                     }
+                    break;
     
                 case '/loginattempt':
                     username=req.post['username'];
