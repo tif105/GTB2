@@ -156,6 +156,7 @@
 </html>
 
 <script>
+    var goal=[];
     var calsvg=document.getElementById('Calendar').innerHTML;
     function daysinmonth(date){
         return new Date(date.getFullYear(),date.getMonth()+1, 0).getDate();
@@ -218,8 +219,18 @@
 	        day=i+firstDayOfmMnth-1
 	        actualday=i+1;
             svg+='<text x="'+getxcoord(day)+'%" y="'+(getycoord(day)+2)+'%" fill="black">'+actualday+'</text>'
-            document.getElementById('Calendar').innerHTML=svg;
+            
         }
+
+        for (i=0; i<goal.length; i++){
+            if (goal[i].month==date.getMonth()){
+                console.log("match");
+                day=(firstDayOfmMnth+goal[i].day)-2;
+                console.log(day);
+                svg+='<text x="'+getxcoord(day)+'%" y="'+(getycoord(day)+4)+'%" fill="green">'+goal[i].description+'</text>'
+            }
+        }
+        document.getElementById('Calendar').innerHTML=svg;
     }
 
 
@@ -266,12 +277,23 @@
         addclicktocalendar();
     }
 
+    function update(){
+		$.post("/getgoals",function(data){
+			datasplit=data.split(";");
+			console.log(datasplit);
+			goal=[];
+			for (i=0;i<(datasplit.length)-1;i++){
+				servertogoal(datasplit[i]);
+			}
+			redrawmain();
+		});
+		
+	}
     date=new Date();
     monthel=document.getElementById('Month');
     nextbutton=document.getElementById('nextarrow');
     lastbutton=document.getElementById('lastarrow');
     yearel=document.getElementById('year');
-    refreshcalendar();
 
     nextbutton.addEventListener('click', function(){
         var monthn=date.getMonth();
@@ -285,7 +307,6 @@
         date.setMonth(monthn); date.setFullYear(year);
         refreshcalendar();
     })
-
 
     lastbutton.addEventListener('click', function(){
         var monthn=date.getMonth();
@@ -378,12 +399,14 @@
                     
                     document.getElementById('form').style.display='block';
                     document.getElementById('submitbtn').addEventListener('click', function (){
-                        hours=document.getElementById('hours').value; console.log(hours);
-                        minutes=document.getElementById('minutes').value; console.log(minutes);
-                        description=document.getElementById('description').value; console.log(description);
-                        date=document.getElementById('date').value; console.log(date);
-                        $.post("/addgoal",{date: date,hours: hours, minutes: minutes, description: description} );
+                        formhours=document.getElementById('hours').value; console.log(hours);
+                        formminutes=document.getElementById('minutes').value; console.log(minutes);
+                        formdescription=document.getElementById('description').value; console.log(description);
+                        formdate=document.getElementById('date').value; console.log(date);
+                        $.post("/addgoal",{date: formdate,hours: formhours, minutes: formminutes, description: formdescription} );
 
+                        update();
+                        document.getElementById('form').style.display="none"
                     });
                 }
                 
@@ -391,9 +414,78 @@
 
         });
     }
-    addclicktocalendar();
     document.getElementById('form').style.display="none"
 
+    function servertogoal(data){
+		goaltext=data.split(",");
+		var month=Number(goaltext[0]);
+		var day=Number(goaltext[1]);
+		var year=Number(goaltext[2]);
+		var hours=Number(goaltext[3]);
+		var minutes=Number(goaltext[4]);
+		var what=goaltext[5];
+
+		colonsplit=goaltext[5].split(':');
+		ID=colonsplit[1];
+		var what=colonsplit[0];
+		
+		
+		if( typeof month!="undefined" && typeof day!="undefined" && typeof year!="undefined" && typeof hours!="undefined"
+		&& typeof minutes!="undefined" && typeof what!="undefined"){
+			index=goal.length;
+			goal[index] = new deadline(what,2,year,month,day,hours,minutes,00,ID)
+			
+		} 
+
+	}
+
+    function deadline(description,type,year,month,day,hour,minute,second,ID){
+		this.ID=ID;
+		this.description = description;
+		this.type = type;
+		this.year = year;
+		this.month = month;
+		this.day = day;
+		this.hour = hour;
+		this.minute = minute;
+		this.second = second;
+		this.getmilliseconds= function () {
+			if(this.type==1){
+				return (this.hour*3600000)+(this.minute*60000)
+			}
+			if (this.type==2){
+				let dat= new Date(this.year,this.month,this.day,this.hour,this.minute,this.second,00);
+				return dat.getTime();
+			
+			
+			}
+		
+		};
+		
+		this.getmillisecondsto= function () {
+
+			if (this.type==1){
+				var cmilliseconds= (date.getHours()*3600000)+(date.getMinutes()*60000);
+				var gmilliseconds= this.getmilliseconds();
+				if (cmilliseconds>=gmilliseconds){
+					gmilliseconds =gmilliseconds + 86400000;
+				}
+			}
+		
+			if (this.type==2){
+				var cmilliseconds= (date.getTime());
+				var gmilliseconds= (this.getmilliseconds());
+			
+				
+			}
+			return (gmilliseconds-cmilliseconds);
+		};
+	
+		this.getminutesto = function () {return (this.getmillisecondsto() /1000/60)};
+
+	}
+
+    update();
 
 
 
