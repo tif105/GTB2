@@ -204,13 +204,13 @@ function addtogoals(req,res){
 }
 
 const app = function (req,res){
-    console.log(req);
+    console.log(req.user-agent));
 
     user= new Promise(function (resolve,reject){
         resolve(tokenauthenticate(req));   
     });
     post = new Promise(function(resolve,reject){
-        resolve(getpostdata(req.user-agent);
+        resolve(getpostdata(req));
     });
 
     Promise.all([user,post]).then( function(data){
