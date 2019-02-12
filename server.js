@@ -204,7 +204,7 @@ function addtogoals(req,res){
 }
 
 const app = function (req,res){
-    console.log(req.user-agent);
+    console.log(req);
 
     user= new Promise(function (resolve,reject){
         resolve(tokenauthenticate(req));   
