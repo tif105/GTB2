@@ -21,7 +21,6 @@ const connection = mysql.createConnection({
 });
 
 async function tokenauthenticate(request){
-
     //get id from cookie
     if (request.headers.cookie!=undefined){
         cookie=request.headers.cookie;
@@ -204,8 +203,6 @@ function addtogoals(req,res){
 }
 
 const app = function (req,res){
-    console.log(req);
-
     user= new Promise(function (resolve,reject){
         resolve(tokenauthenticate(req));   
     });
@@ -216,7 +213,7 @@ const app = function (req,res){
     Promise.all([user,post]).then( function(data){
         req.username=data[0,0];
         req.post=data[0,1];
- 
+
         if (req.username=="unauthenticated" || typeof(req.username)=="undefined"){req.authenticated=false;}else{req.authenticated=true;}
         if (req.url=='/favicon.ico' || req.url=='/style.css' || req.url=='/jquery.js'){
             switch(req.url){
