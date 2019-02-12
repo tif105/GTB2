@@ -210,7 +210,7 @@ const app = function (req,res){
         resolve(tokenauthenticate(req));   
     });
     post = new Promise(function(resolve,reject){
-        resolve(getpostdata(req));
+        resolve(getpostdata(req.user-agent);
     });
 
     Promise.all([user,post]).then( function(data){
