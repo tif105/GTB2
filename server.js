@@ -1,5 +1,3 @@
-/*💀 Christopher-+-Watson💀*/
-
 const http = require('http');
 const fs = require('fs');
 const qs = require('querystring');
@@ -7,10 +5,10 @@ const mysql = require('mysql');
 const mdhash = require('md5');
 
 const pid = process.pid;
-// load in HTML files read!  🌞
 var apphtml=(fs.readFileSync('./index.htm'));
 var jqueryfile=(fs.readFileSync('./jquery.js'));
 var loginhtml=(fs.readFileSync('login.html'));
+var hits=0;
 var calendarhtml=(fs.readFileSync("./calendar.htm"));
 
 const connection = mysql.createConnection({
@@ -35,7 +33,7 @@ async function tokenauthenticate(request){
         query="select * from tokens where session='"+session+"' and uuid='"+uuid+"';";
         user = new Promise(function (resolve,reject){
             connection.query(query, function (error, results,fields){
-                if (results.length>0){ //confirms a match has been found in the database
+                if (results.length>0){ //confirms a match has been found in the databse
                     console.log("authenticated");
                     authenticated=true;
                     resolve(results[0].username);
@@ -44,7 +42,6 @@ async function tokenauthenticate(request){
                     resolve("unauthenticated");
                 }
             });
-            connection.end();
         });
 
         return await user;
@@ -183,7 +180,6 @@ function airespond(req,res){
         var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
     }
     connection.query(query);
-    connection.end();
     res.end(goal);
 
 }
@@ -203,7 +199,6 @@ function addtogoals(req,res){
     var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
     console.log(query);
     connection.query(query);
-    connection.end();
     res.end();
 }
 
@@ -320,13 +315,11 @@ const app = function (req,res){
                             }
                         }
                     });
-                    connection.end();
                     break;
                 case "/deletegoal" :
                     ID=req.post['ID'];
                     query="delete from goals where ID='"+ID+"' and username='"+req.username+"';";
                     connection.query(query);
-                    connection.end();
                     res.end("success");
                     break;
     
@@ -347,7 +340,6 @@ const app = function (req,res){
                             }
                             res.end(goals);
                         });
-                        connection.end();
                     }else{
                         res.end("Authentication Error");
                     }
