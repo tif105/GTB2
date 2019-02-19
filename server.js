@@ -10,6 +10,8 @@ var jqueryfile=(fs.readFileSync('./jquery.js'));
 var loginhtml=(fs.readFileSync('login.html'));
 var hits=0;
 var calendarhtml=(fs.readFileSync("./calendar.htm"));
+var packimg=(fs.readFileSync("./pack.jpg"));
+var bottleimg=(fs.readFileSync("./bottle.jpg"));
 
 const connection = mysql.createConnection({
     host:'localhost',
@@ -344,6 +346,13 @@ const app = function (req,res){
                         res.end("Authentication Error");
                     }
                     break;
+                case '/pack.jpg' :
+                    res.writeHead(200,{'content-type' : 'image/jpeg'});
+                    res.end(packimg);
+                    break;
+                case '/bottle.jpg' : 
+                    res.writeHead(200,{'content-type' : 'image/jpeg'});
+                    res.end(bottleimg);
         
                 default :
                     res.end('404 error. No idea what you looking for.');

@@ -231,11 +231,32 @@
 			
 			for (i=0; i<=l; i++){
 				ID=goal[i].ID;
+				// get time to
 				ttimetoim=goal[i].getminutesto();
 				description=goal[i].description;
 				ttimetoih=Math.floor(ttimetoim/60);
 				ttimetominutes=Math.floor(ttimetoim%60);
-				outputHTML=outputHTML+'<Div class="goalbox"><Div class="goalheader">'+'<button class="deletebutton" onclick="deletegoal('+ID+')">X</button>'+description+'</Div>Hours: '+ttimetoih+" minutes: "+ttimetominutes+'</Div><BR>';
+				//
+
+				// break time to into bottles and packs
+				tiBottles= ttimetoih%24;
+				tiPacks= Math.floor(ttimetoih/24);
+				//
+
+				//create bottlepack div
+				bottlediv=``;
+				for (x=0; x<tiPacks; x++){
+					bottlediv+=`<img src="pack.jpg" width="15px" height="15px">`;
+					
+				}
+
+				for (y=0; y<tiBottles; y++){
+					bottlediv+=`<img src="bottle.jpg" width="5px" height="15px">&nbsp;`;
+					
+				}
+
+				outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(`+ID+`)">X</button>`+description+`</Div>Hours: `+ttimetoih+` minutes: `+ttimetominutes+`
+				<Div>`+bottlediv+`</Div></Div>`;
 				
 			}
 			
