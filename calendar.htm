@@ -403,9 +403,11 @@
                         formminutes=document.getElementById('minutes').value; console.log(minutes);
                         formdescription=document.getElementById('description').value; console.log(description);
                         formdate=document.getElementById('date').value; console.log(date);
-                        $.post("/addgoal",{date: formdate,hours: formhours, minutes: formminutes, description: formdescription} );
+                        $.post("/addgoal",{date: formdate,hours: formhours, minutes: formminutes, description: formdescription},function () {
+                            update();
+                        });
 
-                        update();
+                        
                         document.getElementById('form').style.display="none"
                     });
                 }
