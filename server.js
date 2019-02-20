@@ -181,11 +181,8 @@ function airespond(req,res){
     if (goal!="fail"){
         var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
     }
-    connection.query(query, function(){
-        res.end(goal);
-        connection.end();
-    });
-    
+    connection.query(query);
+    res.end(goal);
 
 }
 
@@ -301,7 +298,6 @@ const app = function (req,res){
                     now.setYear(year);
                     
                     connection.query(query, function (error, results,fields){
-                        connection.end();
                         if (results.length>0){
                             if (password==results[0].password){
                                 console.log("login success");
@@ -314,7 +310,6 @@ const app = function (req,res){
                                 res.writeHead(302,{'location': "/",
                                 'set-cookie' : ['uuid='+uuid+";  expires=' "+ now.toUTCString(),"session="+session+'; expires=' + now.toUTCString() ]
                                 });
-                                
                                 res.end();
                             }else{
                                 res.writeHead(302,{'location' : '/'})
@@ -326,11 +321,8 @@ const app = function (req,res){
                 case "/deletegoal" :
                     ID=req.post['ID'];
                     query="delete from goals where ID='"+ID+"' and username='"+req.username+"';";
-                    connection.query(query, function(){
-                        connection.end();
-                        res.end("success");
-                    });
-                    
+                    connection.query(query);
+                    res.end("success");
                     break;
     
                 case '/aibot' :
@@ -342,7 +334,6 @@ const app = function (req,res){
                     if (req.authenticated){
                         query=" select * from goals where username='"+req.username+"';";
                         connection.query(query,function(error,results,fields){
-                            connection.end();
                             console.log(results);
                             var goals="";
                             for (var i=0; i<results.length;i++){
