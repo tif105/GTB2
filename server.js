@@ -183,6 +183,7 @@ function airespond(req,res){
     }
     connection.query(query, function(){
         res.end(goal);
+        connection.end();
     });
     
 
@@ -202,10 +203,8 @@ function addtogoals(req,res){
     var goal=month+","+day+","+year+","+hour+","+minutes+","+what;
     var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
     console.log(query);
-    connection.query(query, function(){
-        res.end();
-    });
-    
+    connection.query(query);
+    res.end();
 }
 
 const app = function (req,res){
@@ -302,6 +301,7 @@ const app = function (req,res){
                     now.setYear(year);
                     
                     connection.query(query, function (error, results,fields){
+                        connection.end();
                         if (results.length>0){
                             if (password==results[0].password){
                                 console.log("login success");
@@ -327,6 +327,7 @@ const app = function (req,res){
                     ID=req.post['ID'];
                     query="delete from goals where ID='"+ID+"' and username='"+req.username+"';";
                     connection.query(query, function(){
+                        connection.end();
                         res.end("success");
                     });
                     
@@ -341,6 +342,7 @@ const app = function (req,res){
                     if (req.authenticated){
                         query=" select * from goals where username='"+req.username+"';";
                         connection.query(query,function(error,results,fields){
+                            connection.end();
                             console.log(results);
                             var goals="";
                             for (var i=0; i<results.length;i++){
