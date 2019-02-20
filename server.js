@@ -15,6 +15,7 @@ var bottleimg=(fs.readFileSync("./bottle.jpg"));
 
 const connection = mysql.createConnection({
     host:'localhost',
+    
     SSL : {
     rejectUnauthorized: false
     },

@@ -210,8 +210,8 @@
 	});
 
 	function deletegoal(ID){
-		$.post("/deletegoal",{ID: ID });
-		getgoals();
+		$.post("/deletegoal",{ID: ID }, function (){getgoals();});
+		
 	}
 
 	function drawdashboard(){
