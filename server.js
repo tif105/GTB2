@@ -15,7 +15,6 @@ var bottleimg=(fs.readFileSync("./bottle.jpg"));
 
 const connection = mysql.createConnection({
     host:'localhost',
-    
     SSL : {
     rejectUnauthorized: false
     },
@@ -36,7 +35,7 @@ async function tokenauthenticate(request){
         query="select * from tokens where session='"+session+"' and uuid='"+uuid+"';";
         user = new Promise(function (resolve,reject){
             connection.query(query, function (error, results,fields){
-                if (results.length>0){ //confirms a match has been found in the databse
+                if (results){ //confirms a match has been found in the databse
                     console.log("authenticated");
                     authenticated=true;
                     resolve(results[0].username);

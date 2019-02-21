@@ -1,22 +1,28 @@
 mysql= require("mysql");
+
+
+
+
 const connection = mysql.createConnection({
     host:'localhost',
     SSL : {
     rejectUnauthorized: false
     },
-    user:'nodeuser@localhost',
-    password : 'eDinburgh@09',
+    user:'root',
     database:'server'
 });
 
 connection.query("select * from users;", function (error,results,fields){
-    if (typeof(results)==undefined){
-        console.log("fail");
+    if (results){
         
-    }else {
+
         console.log(error);
         console.log("success");
         console.log(results.length);
+        console.log(results);
+        
+    }else {
+        console.log("fail");
     }
 
 });

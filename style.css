@@ -1,16 +1,12 @@
 /* CSS Document */
 
 body {
-	
 	margin : 0px;
 	background-color : #354244;
-
 }
 
 #test {
 	color: aqua;
-	
-	
 }
 
 #masthead {
@@ -29,31 +25,25 @@ body {
 
 #dateform {
 	display: none;
-	
 }
 
 .goalbox {
 	background-color: #000267;
-	border-radius: 3px;
 	color : azure;
 	
 	border-style: solid;
 	border-width: 1px;
 	padding-bottom: 2px;
-	border-radius : 5px;
 	right: 80%
 	
 }
 
 .goalheader{
 	background-color: #595A7E;
-	
 }
 
 .form{
 	background-color : orangered;
-	
-	
 }
 .deletebutton{
 	background-color : transparent;

@@ -21,8 +21,7 @@
 	<button id="addeadlinebtton">ADD+</button>	
 	</div>
 	
-	
-	
+
 	<div id="aiassist">
 		<input type="text" id="aitextfield"><br>
 		<button id="aiokbutton">OK</button><br>
@@ -70,11 +69,14 @@
 	function getgoals(){
 		$.post("/getgoals",function(data){
 			datasplit=data.split(";");
-			console.log(datasplit);
+			datasplit.sort();
+			
 			goal=[];
-			for (i=0;i<(datasplit.length)-1;i++){
+			for (i=1;i<(datasplit.length);i++){
 				servertogoal(datasplit[i]);
 			}
+
+
 			drawdashboard();
 		});
 		
@@ -200,48 +202,6 @@
 	document.getElementById('output').innerHTML=outputHTML;
 
 	}
-
-
-
-	
-
-	//eventhandlers	
-	document.getElementById('okbutton').addEventListener('click',function (){
-		//take daytime and convert to milliseconds
-		type=document.getElementById('type').value;
-		hours=document.getElementById('hour').value;
-		minutes=document.getElementById('minutes').value;
-		let description= document.getElementById('goalname').value;
-	
-		//add as object to 'goal' array
-		index=goal.length
-		if (type==1){
-		
-			goal[index] = new deadline(description,1,0,0,0,hours,minutes,00);
-		}
-		if (type==2){
-			month=document.getElementById('month').value;
-			day=document.getElementById('day').value;
-			year=document.getElementById('year').value;
-			goal[index] = new deadline(description,2,year,month,day,hours,minutes,00);
-		}
-		adddeadline = document.getElementById('adddeadline');
-		adddeadline.style.display="none";
-		
-	});
-		
-	document.getElementById('type').addEventListener('change', function(){
-		let value=document.getElementById('type').value;
-		if (value==1){
-			document.getElementById('dateform').style.display="none";
-			console.log("hide");
-		} 
-		if (value==2){
-			document.getElementById('dateform').style.display="block";
-			console.log("show");
-		}
-	
-	});
 
 	getgoals();
 	
