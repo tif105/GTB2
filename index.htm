@@ -70,12 +70,10 @@
 		$.post("/getgoals",function(data){
 			datasplit=data.split(";");
 			datasplit.sort();
-			
 			goal=[];
 			for (i=1;i<(datasplit.length);i++){
 				servertogoal(datasplit[i]);
 			}
-
 
 			drawdashboard();
 		});
