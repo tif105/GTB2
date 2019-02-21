@@ -10,15 +10,15 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Gotimebuddy</title>
+<title>timebuddi</title>
 
 <link href="style.css" rel="stylesheet" type="text/css">
 
 </head>
 <body>
 	<div id="masthead">
-	<div><b>GotTIMEBuddy</b></div>
-	<button id="addeadlinebtton">ADD+</button>	
+	<div><b>TIMEBuddi</b></div>
+	<div class="navbutton"><button id="addeadlinebtton">ADD+</button>	</div>
 	</div>
 	
 
@@ -187,10 +187,13 @@
 					bottlediv+=`<img src="bottle.jpg" width="5px" height="15px">`;
 					
 				}
-
-				outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(`+ID+`)">X</button>`+description+`</Div>Hours: `+ttimetoih+` minutes: `+ttimetominutes+`
-				<Div>`+bottlediv+`</Div></Div>`;
-				
+				if (ttimetoih>0){
+					outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(`+ID+`)">X</button>`+description+`</Div>Hours: `+ttimetoih+` minutes: `+ttimetominutes+`
+					<Div>`+bottlediv+`</Div></Div>`;
+				}else{
+					outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(`+ID+`)">X</button>`+description+`</Div>Due
+					<Div>`+bottlediv+`</Div></Div>`;
+				}
 			}
 			
 		

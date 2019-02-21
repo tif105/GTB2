@@ -3,104 +3,6 @@
     <head>
         <title>Calendar</title>
         <link href="style.css" rel="stylesheet" type="text/css">
-        <style>
-                #month {
-                    padding-top: 1em;
-                    padding-bottom: 1em;
-                    background-color : #FF5F00;
-                    font-size : 20pt;
-                    font-weight : bold;
-                    text-align: center;
-                    color: white;
-                    width : 1000px;
-                    text-align : center;
-                    height : 130px;
-
-                }
-
-                #month ul {
-                    margin : 10px;
-                    padding : 0px;
-
-                }
-
-                .month {
-
-                    list-style : none;
-                    
-                }
-                .last  {
-                    list-style: none;
-                    float:left;
-                    
-                }
-                .next {
-                    list-style: none;
-                    float:right;
-                }
-
-                #main {
-
-                    color : black;
-                    width: 1000px;
-                    font-size : 12px;
-                }
-
-               #month td{
-                    font-size : 12px;
-                    text-align : left;
-                }
-                #month table{
-                    float: left;
-                    width : 1000px;                }
-                #calendar {
-                    background-color : whitesmoke;
-                    width : 900px;
-                    height : 500px;
-                    font-size : 10px;
-                }
-                .daysofweek li{
-                    display: inline-block;
-                    width: 5.03em;
-                    text-align : left;
-                }
-                .daysofweek{
-                    float: left;
-                }
-
-                #form {
-                    width : 980px;;
-                    height : 500px;
-                    position : fixed;
-                    top : 180px;
-                    background-color : #354244f3;
-                    left : 5px;
-                    border-radius : 10px;
-                    padding : 4px;
-                    
-                }
-                #clbutton{
-                    background : none;
-                    border-style : solid;
-                    border-color : white;
-                    color : white;
-
-                }
-                .arrowbutton{
-                    background : none;
-                    border-style : none;
-                    font-size: 36px;
-                    color : white;
-                    border-radius : 10px;
-                    
-                }
-                #gtblogo {
-                    position : absolute;
-                    left: 0px;
-                }
-                
-                
-            </style>
 
         <script src="jquery.js"></script>
     </head>
@@ -110,7 +12,8 @@
 
             <div id="month">
                 <ul class="monthbar">
-                    <div id="gtblogo">GotTIMEBuddy</div>
+                    <div id="gtblogo">TIMEBuddi</div>
+                    <div class="navbutton"><button id="dashboardbtn">Dashboard</button>	</div>
                     <li class="year" id="year">2019</li>
                     <li class="next"><button id="nextarrow" class="arrowbutton">&#8250;</button></li>
                     <li class="last" ><button id="lastarrow" class="arrowbutton">&#8249;</button></li>
@@ -485,7 +388,11 @@
 	
 		this.getminutesto = function () {return (this.getmillisecondsto() /1000/60)};
 
-	}
+    }
+    
+    document.getElementById('dashboardbtn').addEventListener('click', function(){
+        window.location.href = "/";
+    });
 
     update();
 
