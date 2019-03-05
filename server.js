@@ -13,16 +13,19 @@ var calendarhtml=(fs.readFileSync("./calendar.htm"));
 var packimg=(fs.readFileSync("./pack.jpg"));
 var bottleimg=(fs.readFileSync("./bottle.jpg"));
 
-const connection = mysql.createConnection({
-    host:'localhost',
-    SSL : {
-    rejectUnauthorized: false
-    },
-    user:'root',
-    database:'server'
-});
+
 
 async function tokenauthenticate(request){
+    const connection = mysql.createConnection({
+        host:'localhost',
+        SSL : {
+        rejectUnauthorized: false
+        },
+        user:'root',
+        database:'server'
+    });
+
+
     //get id from cookie
     if (request.headers.cookie!=undefined){
         cookie=request.headers.cookie;
@@ -35,6 +38,7 @@ async function tokenauthenticate(request){
         query="select * from tokens where session='"+session+"' and uuid='"+uuid+"';";
         user = new Promise(function (resolve,reject){
             connection.query(query, function (error, results,fields){
+                connection.end();
                 if (results){ //confirms a match has been found in the databse
                     console.log("authenticated");
                     authenticated=true;
@@ -68,6 +72,16 @@ async function getpostdata(request){
 }
 
 function airespond(req,res){
+    const connection = mysql.createConnection({
+        host:'localhost',
+        SSL : {
+        rejectUnauthorized: false
+        },
+        user:'root',
+        database:'server'
+    });
+
+
     // AIparse
     text=req.post["text"];
     textsplit=text.split(" ");
@@ -182,6 +196,7 @@ function airespond(req,res){
         var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
     }
     connection.query(query, function(){
+        connection.end();
         res.end(goal);
     });
     
@@ -189,6 +204,14 @@ function airespond(req,res){
 }
 
 function addtogoals(req,res){
+    const connection = mysql.createConnection({
+        host:'localhost',
+        SSL : {
+        rejectUnauthorized: false
+        },
+        user:'root',
+        database:'server'
+    })
     
     var date=req.post["date"];
     var datespl=date.split('-');
@@ -203,12 +226,24 @@ function addtogoals(req,res){
     var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
     console.log(query);
     connection.query(query, function(){
+        connection.end();
         res.end();
     });
     
 }
 
 const app = function (req,res){
+    // create connection
+    const connection = mysql.createConnection({
+        host:'localhost',
+        SSL : {
+        rejectUnauthorized: false
+        },
+        user:'root',
+        database:'server'
+    });
+
+
     user= new Promise(function (resolve,reject){
         resolve(tokenauthenticate(req));   
     });
@@ -302,6 +337,7 @@ const app = function (req,res){
                     now.setYear(year);
                     
                     connection.query(query, function (error, results,fields){
+                        connection.end();
                         if (results.length>0){
                             if (password==results[0].password){
                                 console.log("login success");
@@ -310,7 +346,7 @@ const app = function (req,res){
     
     
                                 query="INSERT INTO tokens (uuid,session,username) VALUES ('"+uuid+"','"+session+"','"+username+"');"
-                                connection.query(query);
+                                connection.query(query, function(){connection.end();});
                                 res.writeHead(302,{'location': "/",
                                 'set-cookie' : ['uuid='+uuid+";  expires=' "+ now.toUTCString(),"session="+session+'; expires=' + now.toUTCString() ]
                                 });
@@ -327,7 +363,9 @@ const app = function (req,res){
                     ID=req.post['ID'];
                     query="delete from goals where ID='"+ID+"' and username='"+req.username+"';";
                     connection.query(query, function(){
+                        connection.end();
                         res.end("success");
+                        
                     });
                     
                     break;
@@ -341,6 +379,7 @@ const app = function (req,res){
                     if (req.authenticated){
                         query=" select * from goals where username='"+req.username+"';";
                         connection.query(query,function(error,results,fields){
+                            connection.end();
                             console.log(results);
                             var goals="";
                             for (var i=0; i<results.length;i++){
