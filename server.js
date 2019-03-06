@@ -12,18 +12,18 @@ var hits=0;
 var calendarhtml=(fs.readFileSync("./calendar.htm"));
 var packimg=(fs.readFileSync("./pack.jpg"));
 var bottleimg=(fs.readFileSync("./bottle.jpg"));
-
-
-
-async function tokenauthenticate(request){
-    const connection = mysql.createConnection({
+const connblob= {
         host:'localhost',
         SSL : {
         rejectUnauthorized: false
         },
         user:'root',
         database:'server'
-    });
+    }
+
+
+async function tokenauthenticate(request){
+    var connection = mysql.createConnection(connblob);
 
 
     //get id from cookie
@@ -72,14 +72,8 @@ async function getpostdata(request){
 }
 
 function airespond(req,res){
-    const connection = mysql.createConnection({
-        host:'localhost',
-        SSL : {
-        rejectUnauthorized: false
-        },
-        user:'root',
-        database:'server'
-    });
+    var connection = mysql.createConnection(connblob);
+
 
 
     // AIparse
@@ -204,14 +198,8 @@ function airespond(req,res){
 }
 
 function addtogoals(req,res){
-    const connection = mysql.createConnection({
-        host:'localhost',
-        SSL : {
-        rejectUnauthorized: false
-        },
-        user:'root',
-        database:'server'
-    })
+    var connection = mysql.createConnection(connblob);
+
     
     var date=req.post["date"];
     var datespl=date.split('-');
@@ -234,14 +222,8 @@ function addtogoals(req,res){
 
 const app = function (req,res){
     // create connection
-    const connection = mysql.createConnection({
-        host:'localhost',
-        SSL : {
-        rejectUnauthorized: false
-        },
-        user:'root',
-        database:'server'
-    });
+    var connection = mysql.createConnection(connblob);
+
 
 
     user= new Promise(function (resolve,reject){
