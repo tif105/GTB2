@@ -13,19 +13,17 @@ var calendarhtml=(fs.readFileSync("./calendar.htm"));
 var packimg=(fs.readFileSync("./pack.jpg"));
 var bottleimg=(fs.readFileSync("./bottle.jpg"));
 
-const connblob =mysql.createConnection({
-    host:'localhost',
-    SSL : {
-    rejectUnauthorized: false
-    },
-    user:'root',
-    database:'server'
-
-});
 
 
 async function tokenauthenticate(request){
-    var connection = connblob;
+    const connection = mysql.createConnection({
+        host:'localhost',
+        SSL : {
+        rejectUnauthorized: false
+        },
+        user:'root',
+        database:'server'
+    });
 
 
     //get id from cookie
