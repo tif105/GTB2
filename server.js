@@ -13,13 +13,13 @@ var calendarhtml=(fs.readFileSync("./calendar.htm"));
 var packimg=(fs.readFileSync("./pack.jpg"));
 var bottleimg=(fs.readFileSync("./bottle.jpg"));
 const connblob= {
-        host:'localhost',
-        SSL : {
-        rejectUnauthorized: false
-        },
-        user:'root',
-        database:'server'
-    }
+    host:'localhost',
+    SSL : {
+    rejectUnauthorized: false
+    },
+    user:'root',
+    database:'server'
+}
 
 
 async function tokenauthenticate(request){
@@ -40,7 +40,6 @@ async function tokenauthenticate(request){
             connection.query(query, function (error, results,fields){
                 connection.end();
                 if (results){ //confirms a match has been found in the databse
-                    console.log("authenticated");
                     authenticated=true;
                     resolve(results[0].username);
                     
@@ -60,11 +59,9 @@ async function getpostdata(request){
         //get data 
         var postdata='';
         request.on('data', function (chunk){
-            console.log("Receiving");
             postdata += chunk;
         });
         request.on('end', function(){
-            console.log("Finished receiving");
             resolve(qs.parse(postdata));
         });
     });
@@ -85,7 +82,7 @@ function airespond(req,res){
     for (var i=0; i<=endword; i++){
         //catch date reference
         if (textsplit[i]=="today"){when=0;}
-        if (textsplit[i]=="tomorrow"){when=1; console.log("tomorrow")} //if i find the word tomorrow
+        if (textsplit[i]=="tomorrow"){when=1; 
         if (textsplit[i]=="yesterday"){when=2;} //if i find the word tomorrow
 
         if (textsplit[i]=="next"){
@@ -184,7 +181,7 @@ function airespond(req,res){
     && typeof minutes!="undefined" && typeof what!="undefined"){
         var goal=month+","+day+","+year+","+hours+","+minutes+","+what;
     }else {goal="fail";}
-    console.log(goal);
+   
     //add to database
     if (goal!="fail"){
         var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
@@ -207,12 +204,12 @@ function addtogoals(req,res){
     var month=Number(datespl[1]);
     month--;
     var day=datespl[2];
-    var what=req.post['description']; console.log(what);
-    var hour=req.post['hours']; console.log(hour);
-    var minutes=req.post['minutes']; console.log(hour);
+    var what=req.post['description']; 
+    var hour=req.post['hours']; 
+    var minutes=req.post['minutes']; 
     var goal=month+","+day+","+year+","+hour+","+minutes+","+what;
     var query="insert into goals (username,goal) values('"+req.username+"','"+goal+"');";
-    console.log(query);
+
     connection.query(query, function(){
         connection.end();
         res.end();
@@ -273,7 +270,6 @@ const app = function (req,res){
                         res.writeHead(200, {'content-type': 'text/html',});
                         res.end(apphtml);
                         hits=Number(hits+1);
-                        console.log("Index served by PID"+pid);
                     }else{
                         res.writeHead(302,{'location' : 'login'});
                         res.end();
@@ -322,7 +318,6 @@ const app = function (req,res){
                         connection.end();
                         if (results.length>0){
                             if (password==results[0].password){
-                                console.log("login success");
                                 uuid=mdhash(username);
                                 session=mdhash(username+now);
     
@@ -362,10 +357,8 @@ const app = function (req,res){
                         query=" select * from goals where username='"+req.username+"';";
                         connection.query(query,function(error,results,fields){
                             connection.end();
-                            console.log(results);
                             var goals="";
                             for (var i=0; i<results.length;i++){
-                                console.log(results[i].goal);
                                 goals+=results[i].goal+":"+results[i].ID+";";
                             }
                             res.end(goals);
