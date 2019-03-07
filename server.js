@@ -82,7 +82,7 @@ function airespond(req,res){
     for (var i=0; i<=endword; i++){
         //catch date reference
         if (textsplit[i]=="today"){when=0;}
-        if (textsplit[i]=="tomorrow"){when=1; 
+        if (textsplit[i]=="tomorrow"){when=1;}
         if (textsplit[i]=="yesterday"){when=2;} //if i find the word tomorrow
 
         if (textsplit[i]=="next"){
