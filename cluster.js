@@ -7,10 +7,15 @@ const pid = process.pid;
 
 if (cluster.isMaster){
 
-    var stdin = process.openStdin();
-    stdin.addListener("data",function(d){
-        if (d="Launchrep"){cluster.fork();}
+    
+    process.stdin.on("data",function(d){
+        stringin=d.toString().trim();
+        if (stringin=="Launchrep"){cluster.fork();}
+        if (stringin=="A"){console.log("It Equals A");}
+        console.log(stringin);
     });
+
+
     console.log(cluster.workers);
     for (i=0;i<8;i++){
         cluster.fork();
