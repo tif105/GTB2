@@ -315,13 +315,15 @@ const app = function (req,res){
                     now.setYear(year);
                     
                     connection.query(query, function (error, results,fields){
-                        connection.end();
+                        
+                        
                         if (results.length>0){
                             if (password==results[0].password){
+                                console.log("success");
                                 uuid=mdhash(username);
                                 session=mdhash(username+now);
     
-    
+                                
                                 query="INSERT INTO tokens (uuid,session,username) VALUES ('"+uuid+"','"+session+"','"+username+"');"
                                 connection.query(query, function(){connection.end();});
                                 res.writeHead(302,{'location': "/",
@@ -332,6 +334,7 @@ const app = function (req,res){
                             }else{
                                 res.writeHead(302,{'location' : '/'})
                                 res.end();
+                                connection.end();
                             }
                         }
                     });
