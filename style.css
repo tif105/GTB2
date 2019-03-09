@@ -152,21 +152,38 @@ body {
 }
 
 button#dashboardbtn {
-	background :none;
-	border: solid;
-	border-width : 1px;
-	border-color : whitesmoke;
-	color : whitesmoke;
 	position : relative;
 	left : 300px;
 }
 
 button#addeadlinebtton {
+	position : relative;
+	left : 300px;
+}
+
+button {
+
 	background :none;
 	border: solid;
 	border-width : 1px;
-	border-color : whitesmoke;
-	color : whitesmoke;
-	position : relative;
-	left : 300px;
+	border-color : black;
+	color : black;
+}
+
+input {
+	background :none;
+	border: solid;
+	border-width : 1px;
+	border-color : black;
+	color : black;
+
+}
+
+select {
+	background :none;
+	border: solid;
+	border-width : 1px;
+	border-color : black;
+	color : black;
+
 }

@@ -40,9 +40,15 @@ async function tokenauthenticate(request){
             connection.query(query, function (error, results,fields){
                 connection.end();
                 if (results){ //confirms a match has been found in the databse
-                    authenticated=true;
-                    resolve(results[0].username);
+                    
 
+                    if (results.length>0){
+                        authenticated=true;
+                        resolve(results[0].username);
+                    }
+                    else {
+                        resolve("unauthenticated");
+                    }
                     
                     
                 }else{

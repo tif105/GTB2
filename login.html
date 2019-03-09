@@ -3,27 +3,81 @@
 <head>
 <meta charset="utf-8">
 <link href="style.css" rel="stylesheet" type="text/css">
-<title>Untitled Document</title>
+<title>Login Timebuddy</title>
 </head>
 
 <body>
 	
 	<div id="masthead">
-		<div><b>GotTIMEBuddy</b></div>
+		<div><b>TimeBuddi</b></div>
 		
 	</div>
+	<p>TimeBuddi is your new best friend in time management</p>
 	<form action="/loginattempt" method="post">
 				<form action="/login" method="post">
 					<table>
-						<tr><td>Username:</td><td><input type="text" name="username"></td>
-                    	<tr><td>Password:</td><td><input type="password" name="password"></td>
+						<tr><td>Username:</td><td><input type="text" name="username"></td></tr>
+                    	<tr><td>Password:</td><td><input type="password" name="password"></td></tr>
 						
 					</table>
 					<button type="submit">ok</button>
-					
-                </form>
-		
-			
+				</form>
 	</form>
+
+	<p id="usersignup"><button id="signbutton">Create new account</button></p>
 	</body>
+	<script>
+		document.getElementById('signbutton').addEventListener('click', function (){
+			document.getElementById('usersignup').innerHTML=`
+			<form action="/signup" id="signupform" method="post">
+				<p id="errors"></p>
+				<table>
+					<tr><td>Username:</td><td><input type="text" id="formusername" name="username"></td></tr>
+					<tr><td>Password:</td><td><input type="password" id="formpassword" name="password"></td></tr>
+					<tr><td>Password confirm:</td><td><input type="password" id="formpasswordconf" name="passwordconf"></td></tr>
+					<tr><td>Email:</td><td><input type="text" id="formemail" name="email"></td></tr>
+					<tr><td>Date of birth:</td><td><input type="date" name="DOB" id="formDOB"></td></tr>
+				</table>
+				<button type="button" id="submitbutton">Submit</button>
+			</form>
+			`;
+			subbutton= document.getElementById('submitbutton')
+			subbutton.addEventListener('click', function (){
+				//get values and chek em out
+				formusername=document.getElementById('formusername').value;
+				formpassword=document.getElementById('formpassword').value;
+				formpasswordconf=document.getElementById('formpasswordconf').value;
+				formemail=document.getElementById('formemail').value;
+				formDOB=document.getElementById('formDOB').value;
+
+				error=[];
+
+				if (formusername.length<9){
+					error.push(1);
+				}
+
+				if (formpassword.length<9){
+					error.push(2);
+				}
+
+				if (formpassword!=formpasswordconf){
+					error.push(3);
+				}
+
+				if (formemail){}else{ 
+					error.push(4);
+				}
+				console.log(error);
+
+				if (error.length==0){
+					console.log("submitting");
+					document.getElementById('signupform').submit();
+				}
+			});
+			
+
+		});
+	
+	</script>
+
 </html>
