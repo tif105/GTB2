@@ -42,9 +42,11 @@ async function tokenauthenticate(request){
                 if (results){ //confirms a match has been found in the databse
                     authenticated=true;
                     resolve(results[0].username);
+
+                    
                     
                 }else{
-                    resolve("unauthenticated");
+                    resolve("Error");
                 }
             });
         });
