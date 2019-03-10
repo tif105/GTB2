@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <link href="style.css" rel="stylesheet" type="text/css">
 <title>Login Timebuddy</title>
+<script src="jquery.js"></script>
 </head>
 
 <body>
@@ -67,12 +68,24 @@
 				if (formemail){}else{ 
 					error.push(4);
 				}
-				console.log(error);
+				checkuserexist= new Promise( function(resolve,reject){
+					console.log(error);
+					$.post("checkuserexist",{username : formusername, email : formemail}, function (response){
+						resolve(response);
+					});
+				});
+				checkuserexist.then(function (data){
+					exist=Number(data);
+					if(exist>0){
+						error.push(5);
+					}
+					if (error.length==0){
+						console.log("submitting");
+						document.getElementById('signupform').submit();
+					}
+					
+				});
 
-				if (error.length==0){
-					console.log("submitting");
-					document.getElementById('signupform').submit();
-				}
 			});
 			
 

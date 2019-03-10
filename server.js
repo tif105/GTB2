@@ -364,7 +364,6 @@ const app = function (req,res){
                         if (results.length>0){
                             hash=results[0].password;
                             if (bcrypt.compareSync(password, hash)){
-                                console.log("hashmatch");
                                 query="INSERT INTO tokens (uuid,session,username) VALUES ('"+uuid+"','"+session+"','"+username+"');"
                                 connection.query(query, function(){connection.end();});
                                 res.writeHead(302,{'location': "/",
@@ -431,13 +430,113 @@ const app = function (req,res){
                     DOB=req.post['DOB'];
                     password=req.post['password'];
 
-                    var hash=bcrypt.hashSync(password, saltrounds);
-                    query="INSERT INTO users (username, password,email,DOB) values ('"+username+"','"+hash+"','"+email+"','"+DOB+"');";
-                    connection.query(query, function(error, results, fields){
-                        connection.end();
+                    userexist = new Promise(function (resolve,reject){
+                        query="SELECT username from users where username='"+username+"';";
+                        connection.query(query, function (error,results,fields){
+                            if (results){
+                                if (results.length>0){
+                                    resolve("true")
+                                }else{
+                                    resolve("false");
+                                }
+                                
+                            }else{
+                                resolve("error");
+                            }
+                        if (error){console.log(error);}
+                        });
                     });
-                    sendwelcome(email,username);
-                    res.end("signup");
+
+                    emailexist = new Promise(function (resolve,reject){
+                        query="SELECT username from users where email='"+email+"';";
+                        connection.query(query, function (error,results,fields){
+                            if (results){
+                                if (results.length>0){
+                                    resolve("true")
+                                }else{
+                                    resolve("false");
+                                }
+                                
+                            }else{
+                                resolve("error");
+                            }
+                        if (error){console.log(error);}
+                        });
+                    });
+
+                    Promise.all([userexist,emailexist]).then(function (data){
+                        if (data[0,0]!="true" && data[0,1]!="true"){
+                            var hash=bcrypt.hashSync(password, saltrounds);
+                            query="INSERT INTO users (username, password,email,DOB) values ('"+username+"','"+hash+"','"+email+"','"+DOB+"');";
+                            connection.query(query, function(error, results, fields){
+                                connection.end();
+                            });
+                            sendwelcome(email,username);
+                            fs.readFile('./signup.html', function (err,data){
+                                res.end(data);
+                            });
+
+                        }else{
+                            res.end("error");
+                        }
+                    });
+                    break;
+                case '/checkuserexist' :
+                    username=req.post["username"];
+                    email=req.post["email"];
+                    //promise to check username
+                    userexist = new Promise(function (resolve,reject){
+                        query="SELECT username from users where username='"+username+"';";
+                        connection.query(query, function (error,results,fields){
+                            if (results){
+                                if (results.length>0){
+                                    resolve("true")
+                                }else{
+                                    resolve("false");
+                                }
+                                
+                            }else{
+                                resolve("error");
+                            }
+                        if (error){console.log(error);}
+                        });
+                    });
+
+                    
+                    emailexist = new Promise(function (resolve,reject){
+                        query="SELECT username from users where email='"+email+"';";
+                        connection.query(query, function (error,results,fields){
+                            if (results){
+                                if (results.length>0){
+                                    resolve("true")
+                                }else{
+                                    resolve("false");
+                                }
+                                
+                            }else{
+                                resolve("error");
+                            }
+                        if (error){console.log(error);}
+                        });
+                    });
+
+
+
+                    Promise.all([userexist,emailexist]).then(function(data){
+                        connection.end();
+                        exist=0;
+                        if (data[0,0]=="true"){
+                            exist=exist+1;
+                        }
+
+                        if (data[0,1]=="true"){
+                            exist=exist+2;
+                        }
+
+                        exist=String(exist);
+                        res.end(exist);
+                    });
+
                     break;
         
                 default :
