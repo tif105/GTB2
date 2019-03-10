@@ -49,7 +49,7 @@ function sendwelcome(email, username){
         if (error){
             console.log(error);
         }else {
-            console.log("success");
+            console.log("Welcome email sent");
     
         }
     
