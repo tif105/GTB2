@@ -3,8 +3,12 @@ const fs = require('fs');
 const qs = require('querystring');
 const mysql = require('mysql');
 const mdhash = require('md5');
+const bcrypt = require('bcrypt');
+const saltrounds=10;
+const nodemailer = require('nodemailer');
 
 const pid = process.pid;
+
 var apphtml=(fs.readFileSync('./index.htm'));
 var jqueryfile=(fs.readFileSync('./jquery.js'));
 var loginhtml=(fs.readFileSync('login.html'));
@@ -12,6 +16,7 @@ var hits=0;
 var calendarhtml=(fs.readFileSync("./calendar.htm"));
 var packimg=(fs.readFileSync("./pack.jpg"));
 var bottleimg=(fs.readFileSync("./bottle.jpg"));
+
 const connblob= {
     host:'localhost',
     SSL : {
@@ -19,6 +24,37 @@ const connblob= {
     },
     user:'root',
     database:'server'
+}
+
+var transporter = nodemailer.createTransport({
+    service : 'gmail',
+    auth: {
+        user: 'chris.pwatson2@gmail.com',
+        pass: "HeLLfish12"
+    }
+
+});
+
+function sendwelcome(email, username){
+    var message= {
+        from: 'chris.pwatson@gmail.com',
+        to: email,
+        subject : "Welcome to TimeBuddi",
+        html : `<h1>Hello `+username+` </h1>
+        <p>Welcome to TimeBuddi</p>
+        `
+    };
+
+    transporter.sendMail(message, function (error,info){
+        if (error){
+            console.log(error);
+        }else {
+            console.log("success");
+    
+        }
+    
+    });
+
 }
 
 
@@ -326,12 +362,9 @@ const app = function (req,res){
                         
                         
                         if (results.length>0){
-                            if (password==results[0].password){
-                                console.log("success");
-                                uuid=mdhash(username);
-                                session=mdhash(username+now);
-    
-                                
+                            hash=results[0].password;
+                            if (bcrypt.compareSync(password, hash)){
+                                console.log("hashmatch");
                                 query="INSERT INTO tokens (uuid,session,username) VALUES ('"+uuid+"','"+session+"','"+username+"');"
                                 connection.query(query, function(){connection.end();});
                                 res.writeHead(302,{'location': "/",
@@ -339,11 +372,16 @@ const app = function (req,res){
                                 });
                                 
                                 res.end();
+
                             }else{
                                 res.writeHead(302,{'location' : '/'})
                                 res.end();
                                 connection.end();
                             }
+                        }else{
+                            res.writeHead(302,{'location' : '/'})
+                            res.end();
+                            connection.end();
                         }
                     });
                     break;
@@ -385,6 +423,22 @@ const app = function (req,res){
                 case '/bottle.jpg' : 
                     res.writeHead(200,{'content-type' : 'image/jpeg'});
                     res.end(bottleimg);
+                    break;
+
+                case '/signup' :
+                    username=req.post["username"];
+                    email=req.post["email"];
+                    DOB=req.post['DOB'];
+                    password=req.post['password'];
+
+                    var hash=bcrypt.hashSync(password, saltrounds);
+                    query="INSERT INTO users (username, password,email,DOB) values ('"+username+"','"+hash+"','"+email+"','"+DOB+"');";
+                    connection.query(query, function(error, results, fields){
+                        connection.end();
+                    });
+                    sendwelcome(email,username);
+                    res.end("signup");
+                    break;
         
                 default :
                     res.end('404 error. No idea what you looking for.');
@@ -399,4 +453,4 @@ const app = function (req,res){
 
 const server = http.createServer(app)
 
-server.listen(80, function(){console.log('server is running....🚀');});
+server.listen(80);

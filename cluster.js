@@ -76,14 +76,16 @@ if (cluster.isMaster){
     });
 
     setscreen();
+    child=[];
     for (i=0;i<8;i++){
-        cluster.fork();
+        child[i]=cluster.fork('server.js');
+        cpid=child[i].process.pid;
+        console.log("server launched on PID: "+cpid);
     }
     console.log("\x1b[31m","Enter command: ",'\x1b[0m');
     console.log("1: Reload Files");
     console.log("2: Rolling restart");
     console.log("3: Launch process");
 } else {
-    console.log('Worker launched pid: ' +pid);
     require('./server')
 }
