@@ -350,6 +350,7 @@ const app = function (req,res){
                 case '/loginattempt':
                     username=req.post['username'];
                     password=req.post['password'];
+                    console.log(req.post);
                     
                     query="SELECT * FROM users WHERE username= '"+username+"';";
     
@@ -364,6 +365,9 @@ const app = function (req,res){
                         if (results.length>0){
                             hash=results[0].password;
                             if (bcrypt.compareSync(password, hash)){
+
+                                uuid=mdhash(username);
+                                session=mdhash(username+now);
                                 query="INSERT INTO tokens (uuid,session,username) VALUES ('"+uuid+"','"+session+"','"+username+"');"
                                 connection.query(query, function(){connection.end();});
                                 res.writeHead(302,{'location': "/",
