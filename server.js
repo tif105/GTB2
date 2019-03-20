@@ -350,7 +350,7 @@ const app = function (req,res){
                 case '/loginattempt':
                     username=req.post['username'];
                     password=req.post['password'];
-                    console.log(req.post);
+                    console.log(`username: ${username} Password: ${password}`);
                     
                     query="SELECT * FROM users WHERE username= '"+username+"';";
     
