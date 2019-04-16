@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require('https');
 const fs = require('fs');
 const qs = require('querystring');
 const mysql = require('mysql');
@@ -35,6 +35,11 @@ var transporter = nodemailer.createTransport({
 
 });
 
+
+SSLdat ={
+    key: fs.readFileSync("key.pem"),
+    cert: fs.readFileSync("cert.crt")
+}
 function sendwelcome(email, username){
     var message= {
         from: 'chris.pwatson@gmail.com',
@@ -554,6 +559,5 @@ const app = function (req,res){
 
 };
 
-const server = http.createServer(app)
+const server = http.createServer(SSLdat,app).listen(443);
 
-server.listen(80);
