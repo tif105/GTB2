@@ -187,7 +187,8 @@
 					bottlediv+=`<img src="bottle.jpg" width="5px" height="15px">`;
 					
 				}
-				if (ttimetoih>0){
+				
+				if (ttimetoih>0 || ttimetominutes>0){
 					outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(`+ID+`)">X</button>`+description+`</Div>Hours: `+ttimetoih+` minutes: `+ttimetominutes+`
 					<Div>`+bottlediv+`</Div></Div>`;
 				}else{
