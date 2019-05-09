@@ -482,8 +482,8 @@ const app = function (req,res){
                                 connection.end();
                             });
                             sendwelcome(email,username);
-                            fs.readFile('./signup.html', function (err,data){
-                                res.end(data);
+                            fs.readFile('./signup.html', function (err,fsfile){
+                                res.end(fsfile);
                             });
 
                         }else{
