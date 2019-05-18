@@ -189,7 +189,7 @@
 				}
 				
 				if (ttimetoih>0 || ttimetominutes>0){
-					outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(`+ID+`)">X</button>`+description+`</Div>Hours: `+ttimetoih+` minutes: `+ttimetominutes+`
+					outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(${ID})">X</button>${description}</Div> ${ttimetoih} hours and ${ttimetominutes} minutes
 					<Div>`+bottlediv+`</Div></Div>`;
 				}else{
 					outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(`+ID+`)">X</button>`+description+`</Div>Due
