@@ -57,7 +57,7 @@
 		var what=colonsplit[0];
 		
 		
-		if( typeof month!="undefined" && typeof day!="undefined" && typeof year!="undefined" && typeof hours!="undefined"
+		if(typeof month!="undefined" && typeof day!="undefined" && typeof year!="undefined" && typeof hours!="undefined"
 		&& typeof minutes!="undefined" && typeof what!="undefined"){
 			index=goal.length;
 			goal[index] = new deadline(what,2,year,month,day,hours,minutes,00,ID)

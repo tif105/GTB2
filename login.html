@@ -51,6 +51,7 @@
 				formpasswordconf=document.getElementById('formpasswordconf').value;
 				formemail=document.getElementById('formemail').value;
 				formDOB=document.getElementById('formDOB').value;
+				errorout = document.getElementById('errorout');
 
 				error=[];
 
@@ -84,21 +85,32 @@
 						console.log("submitting");
 						document.getElementById('signupform').submit();
 					}
+
+
+					errorout.innerHTML = '';
+					for (var x in error){
+						switch (error[x]){
+							case 1 : 
+								errorout.innerHTML+="Username too short</br>";
+								break;
+							case 2 :
+								errorout.innerHTML+="Password too short</br>";
+								break;
+							case 3 :
+								errorout.innerHTML+="Passwords don't match</br>"
+								break;
+							case 4: 
+								errorout.innerHTML+= "You need to enter Email address</br>"
+								break;
+							case 5:
+								errorout.innerHTML+= "Username already taken</br>"
+								break ;
+						}
+
+				}
 					
-
 				});
-
-				for (var x in error){
-					switch (error[x]){
-						case 1 :
-						
-							break;
-					}
-
-				}
-
-
-				}
+				
 
 			});
 			
