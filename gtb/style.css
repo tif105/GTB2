@@ -1,0 +1,172 @@
+/* CSS Document */
+
+
+#month {
+	padding-top: 1em;
+	padding-bottom: 1em;
+	background-color : #FF5F00;
+	font-size : 20pt;
+	font-weight : bold;
+	text-align: center;
+	color: white;
+	width : 1000px;
+	text-align : center;
+	height : 130px;
+
+}
+
+#month ul {
+	margin : 10px;
+	padding : 0px;
+
+}
+
+.month {
+
+	list-style : none;
+	
+}
+.last  {
+	list-style: none;
+	float:left;
+	
+}
+.next {
+	list-style: none;
+	float:right;
+}
+
+#main {
+
+	color : black;
+	width: 1000px;
+	font-size : 12px;
+}
+
+#month td{
+	font-size : 12px;
+	text-align : left;
+}
+#month table{
+	float: left;
+	width : 1000px;                }
+#calendar {
+	background-color : whitesmoke;
+	width : 900px;
+	height : 500px;
+	font-size : 10px;
+}
+.daysofweek li{
+	display: inline-block;
+	width: 5.03em;
+	text-align : left;
+}
+.daysofweek{
+	float: left;
+}
+
+#form {
+	width : 980px;;
+	height : 500px;
+	position : fixed;
+	top : 180px;
+	background-color : #354244f3;
+	left : 5px;
+	border-radius : 10px;
+	padding : 4px;
+	
+}
+#clbutton{
+	background : none;
+	border-style : solid;
+	border-color : white;
+	color : white;
+
+}
+.arrowbutton{
+	background : none;
+	border-style : none;
+	font-size: 36px;
+	color : white;
+	border-radius : 10px;
+	
+}
+#gtblogo {
+	position : absolute;
+	left: 0px;
+}
+
+body {
+	margin : 0px;
+	background-color : #f1e8e3;
+}
+
+#test {
+	color: aqua;
+}
+
+#masthead {
+	color : white;
+	background-color : #FF5F00;
+	height : 80px;
+	padding-left : 15px;
+	padding-top : 15px;
+	font-size: 32px;
+}
+
+#time {
+	color :  black;
+}
+
+#dateform {
+	display: none;
+}
+
+.goalbox {
+	background-color: rgb(255, 94, 0);
+	color : azure;
+	padding-bottom: 2px;
+	right: 80%
+}
+
+.goalheader{
+	color : rgb(27, 10, 0);
+	background-color: rgb(252, 218, 186);
+}
+
+.form{
+	background-color : orangered;
+}
+.deletebutton{
+	background-color : transparent;
+	color: white;
+	border : none;
+}
+.deletebutton:hover{
+	color : #959799;
+}
+
+.navbutton .button : 
+{
+	
+}
+
+button#dashboardbtn {
+	background :none;
+	border: solid;
+	border-width : 1px;
+	border-color : whitesmoke;
+	color : whitesmoke;
+	position : relative;
+	left : 300px;
+}
+
+button#addeadlinebtton {
+	background :none;
+	border: solid;
+	border-width : 1px;
+	border-color : whitesmoke;
+	color : whitesmoke;
+	position : relative;
+	left : 300px;
+}

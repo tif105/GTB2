@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="style.css" rel="stylesheet" type="text/css">
+<title>Login Timebuddy</title>
+<script src="jquery.js"></script>
+</head>
+
+<body>
+	
+	<div id="masthead">
+		<div><b>TimeBuddi</b></div>
+		
+	</div>
+	<p>TimeBuddi is your new best friend in time management</p>
+	<form action="/loginattempt" method="post">
+				<form action="/login" method="post">
+					<table>
+						<tr><td>Username:</td><td><input type="text" name="username"></td></tr>
+                    	<tr><td>Password:</td><td><input type="password" name="password"></td></tr>
+						
+					</table>
+					<button type="submit">ok</button>
+				</form>
+	</form>
+
+	<p id="usersignup"><button id="signbutton">Create new account</button></p>
+	</body>
+	<script>
+		document.getElementById('signbutton').addEventListener('click', function (){
+			document.getElementById('usersignup').innerHTML=`
+			<form action="/signup" id="signupform" method="post">
+				<p id="errors"></p>
+				<table>
+					<tr><td>Username:</td><td><input type="text" id="formusername" name="username"></td></tr>
+					<tr><td>Password:</td><td><input type="password" id="formpassword" name="password"></td></tr>
+					<tr><td>Password confirm:</td><td><input type="password" id="formpasswordconf" name="passwordconf"></td></tr>
+					<tr><td>Email:</td><td><input type="text" id="formemail" name="email"></td></tr>
+					<tr><td>Date of birth:</td><td><input type="date" name="DOB" id="formDOB"></td></tr>
+				</table>
+				<button type="button" id="submitbutton">Submit</button>
+				<p id ="errorout" />
+			</form>
+			`;
+			subbutton= document.getElementById('submitbutton')
+			subbutton.addEventListener('click', function (){
+				//get values and chek em out
+				formusername=document.getElementById('formusername').value;
+				formpassword=document.getElementById('formpassword').value;
+				formpasswordconf=document.getElementById('formpasswordconf').value;
+				formemail=document.getElementById('formemail').value;
+				formDOB=document.getElementById('formDOB').value;
+				errorout = document.getElementById('errorout');
+
+				error=[];
+
+				if (formusername.length<9){
+					error.push(1);
+				}
+
+				if (formpassword.length<9){
+					error.push(2);
+				}
+
+				if (formpassword!=formpasswordconf){
+					error.push(3);
+				}
+
+				if (formemail){}else{ 
+					error.push(4);
+				}
+				checkuserexist= new Promise( function(resolve,reject){
+					console.log(error);
+					$.post("checkuserexist",{username : formusername, email : formemail}, function (response){
+						resolve(response);
+					});
+				});
+				checkuserexist.then(function (data){
+					exist=Number(data);
+					if(exist>0){
+						error.push(5);
+					}
+					if (error.length==0){
+						console.log("submitting");
+						document.getElementById('signupform').submit();
+					}
+
+
+					errorout.innerHTML = '';
+					for (var x in error){
+						switch (error[x]){
+							case 1 : 
+								errorout.innerHTML+="Username too short</br>";
+								break;
+							case 2 :
+								errorout.innerHTML+="Password too short</br>";
+								break;
+							case 3 :
+								errorout.innerHTML+="Passwords don't match"
+								break;
+							case 4: 
+								errorout.innerHTML+= "Email?"
+								break;
+							case 5:
+								errorout.innerHTML+= "Username already taken"
+								break ;
+						}
+
+				}
+					
+				});
+				
+
+			});
+			
+
+		});
+	
+	</script>
+
+</html>

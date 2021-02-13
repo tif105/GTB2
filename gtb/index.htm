@@ -1,0 +1,211 @@
+<!--//+---------------------------------------------+
+      |                                             |
+      |             All rights reserved             |
+      |             Christopher Watson              |
+      |                                             |
+      +---------------------------------------------+-->
+
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>timebuddi</title>
+
+<link href="style.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+	<div id="masthead">
+	<div><b>TimeBuddi</b></div>
+	<div class="navbutton"><button id="addeadlinebtton">ADD+</button>	</div>
+	</div>
+	
+
+	<div id="aiassist">
+		<input type="text" id="aitextfield"><br>
+		<button id="aiokbutton">OK</button><br>
+		<p id="aioutput"></p>
+	</div>
+	
+	<p id="output"> </p>
+	
+
+</body>
+
+<script src="jquery.js"></script>
+<script>
+	//global variables
+	goal = [];
+	
+	//add deadline button to unhide manual form
+	addeadlinebutton=document.getElementById('addeadlinebtton')
+	adddeadline = document.getElementById('adddeadline');
+	addeadlinebutton.addEventListener('click', function (){window.location="/calendar"});
+	
+	function servertogoal(data){
+		goaltext=data.split(",");
+		var month=Number(goaltext[0]);
+		var day=Number(goaltext[1]);
+		var year=Number(goaltext[2]);
+		var hours=Number(goaltext[3]);
+		var minutes=Number(goaltext[4]);
+		var what=goaltext[5];
+
+		colonsplit=goaltext[5].split(':');
+		ID=colonsplit[1];
+		var what=colonsplit[0];
+		
+		
+		if( typeof month!="undefined" && typeof day!="undefined" && typeof year!="undefined" && typeof hours!="undefined"
+		&& typeof minutes!="undefined" && typeof what!="undefined"){
+			index=goal.length;
+			goal[index] = new deadline(what,2,year,month,day,hours,minutes,00,ID)
+			
+		} 
+
+	}
+
+	function getgoals(){
+		$.post("/getgoals",function(data){
+			datasplit=data.split(";");
+			datasplit.sort();
+			goal=[];
+			for (i=1;i<(datasplit.length);i++){
+				servertogoal(datasplit[i]);
+			}
+
+			drawdashboard();
+		});
+		
+	}
+	//getgoalloop
+	setInterval(getgoals, 15000);
+
+
+	//create deadline blueprint
+	function deadline(description,type,year,month,day,hour,minute,second,ID){
+		this.ID=ID;
+		this.description = description;
+		this.type = type;
+		this.year = year;
+		this.month = month;
+		this.day = day;
+		this.hour = hour;
+		this.minute = minute;
+		this.second = second;
+		this.getmilliseconds= function () {
+			if(this.type==1){
+				return (this.hour*3600000)+(this.minute*60000)
+			}
+			if (this.type==2){
+				let dat= new Date(this.year,this.month,this.day,this.hour,this.minute,this.second,00);
+				return dat.getTime();
+			
+			
+			}
+		
+		};
+		
+		this.getmillisecondsto= function () {
+
+			if (this.type==1){
+				var cmilliseconds= (date.getHours()*3600000)+(date.getMinutes()*60000);
+				var gmilliseconds= this.getmilliseconds();
+				if (cmilliseconds>=gmilliseconds){
+					gmilliseconds =gmilliseconds + 86400000;
+				}
+			}
+		
+			if (this.type==2){
+				var cmilliseconds= (date.getTime());
+				var gmilliseconds= (this.getmilliseconds());
+			
+				
+			}
+			return (gmilliseconds-cmilliseconds);
+		};
+	
+		this.getminutesto = function () {return (this.getmillisecondsto() /1000/60)};
+
+	}
+
+	//create pointers for AI assistant
+	aitextfield=document.getElementById('aitextfield');
+	aiokbutton=document.getElementById('aiokbutton');
+	
+	aiokbutton.addEventListener('click', function (){
+		text=aitextfield.value.toLocaleLowerCase();
+		//send to server
+		$.post("aibot",{text: text}, function(data){
+			getgoals();
+		});
+		
+	});
+
+	function deletegoal(ID){
+		$.post("/deletegoal",{ID: ID }, function (){getgoals();});
+	}
+
+	function drawdashboard(){
+		// get current time
+		date= new Date();
+	
+		//update current time every loop
+		chours=date.getHours();
+		cminutes=date.getMinutes();
+		ctimilliseconds=(chours*3600000)+(cminutes*60000);
+	
+		//time to
+		outputHTML="";
+		if (goal.length >0){
+			l=goal.length
+			l=l-1;
+			
+			for (i=0; i<=l; i++){
+				ID=goal[i].ID;
+				// get time to
+				ttimetoim=goal[i].getminutesto();
+				description=goal[i].description;
+				ttimetoih=Math.floor(ttimetoim/60);
+				ttimetominutes=Math.floor(ttimetoim%60);
+				//
+
+				// break time to into bottles and packs
+				tiBottles= ttimetoih%24;
+				tiPacks= Math.floor(ttimetoih/24);
+				//
+
+				//create bottlepack div
+				bottlediv=``;
+				for (x=0; x<tiPacks; x++){
+					bottlediv+=`<img src="pack.jpg" width="15px" height="15px">`;
+					
+				}
+
+				for (y=0; y<tiBottles; y++){
+					bottlediv+=`<img src="bottle.jpg" width="5px" height="15px">`;
+					
+				}
+				
+				if (ttimetoih>0 || ttimetominutes>0){
+					outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(${ID})">X</button>${description}</Div> ${ttimetoih} hours and ${ttimetominutes} minutes
+					<Div>`+bottlediv+`</Div></Div>`;
+				}else{
+					outputHTML=outputHTML+`<Div class="goalbox"><Div class="goalheader">`+`<button class="deletebutton" onclick="deletegoal(`+ID+`)">X</button>`+description+`</Div>Due
+					<Div>`+bottlediv+`</Div></Div>`;
+				}
+			}
+			
+		
+			
+			
+		}
+	document.getElementById('output').innerHTML=outputHTML;
+
+	}
+
+	getgoals();
+	
+</script>
+</html>
